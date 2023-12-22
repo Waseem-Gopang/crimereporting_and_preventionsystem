@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1083886211348",
+    "project_id": "crimereportingandprevent-22511",
+    "storage_bucket": "crimereportingandprevent-22511.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1083886211348:android:7c9c44ffc7e716fa163201",
+        "android_client_info": {
+          "package_name": "com.crimereportingandpreventionsystem"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCQ8SyU59kIyFEsovsMVXwzMS6b7L2xx74"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
