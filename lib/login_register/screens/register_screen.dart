@@ -1,7 +1,9 @@
 import 'dart:io';
 import 'package:crimereporting_and_preventionsystem/login_register/components/header_widget.dart';
+import 'package:crimereporting_and_preventionsystem/service/firebase.dart';
 import 'package:crimereporting_and_preventionsystem/utils/theme.dart';
 import 'package:csc_picker/csc_picker.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -85,7 +87,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             prefixIcon: const Icon(Icons.badge_outlined),
                             text: 'CNIC No.',
                             hint: 'Enter your CNIC No.',
-                            valError: 'Please your CNIC No.',
+                            valError: 'Please enter your CNIC No.',
                             onChanged: (value) {
                               setState(() {
                                 iNo = value;
@@ -158,7 +160,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             valError: 'Please enter your password',
                             validator: (val) {
                               if (val!.isEmpty) {
-                                return "Please enter the password";
+                                return "Please enter your password";
                               } else if (val.length <= 5) {
                                 return "Password should be 6 characters or more";
                               }
@@ -485,16 +487,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
             ),
           ),
           onPressed: () async {
-            // if (_formKey.currentState!.validate()) {
-            //   bool isDuplicate =  await checkUserExist(iNo);
-            //     if(!isDuplicate) {
-            //       registerUser();
-            //     }else{
-            //       Fluttertoast.showToast(
-            //           msg: "The account already exists for that Identity No.");
-            //     }
-
-            // }
+            if (_formKey.currentState!.validate()) {
+              bool isDuplicate = await checkUserExist(iNo);
+              if (!isDuplicate) {
+                registerUser();
+              } else {
+                Fluttertoast.showToast(
+                    msg: "The account already exists for that Identity No.");
+              }
+            }
           },
         ),
       ),
@@ -503,29 +504,29 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   registerUser() async {
     //create user account
-    //uID = await createAccount(email, pass, iNo);
+    uID = await createAccount(email, pass, iNo);
     //check if avatar uploaded
-    // imageUrl =
-    // image != null ? await uploadImage(file: image!) : "";
+    //imageUrl = image != null ? await uploadImage(file: image!) : "";
     //check if user account created
-    //  if (uID != false) {
-    //get user child reference
-    // DatabaseReference userRef = FirebaseDatabase.instance.ref()
-    //  .child('users');
-    //push information under user/userID
-    // userRef.child(uID.toString()).set({
-    //   'fName': fName,
-    //   'iNo': iNo,
-    //   'email': email,
-    //   'dob': dob,
-    //   'phone': mobileNo,
-    //   'avatar': imageUrl,
-    //   'address': address,
-    //   'country': countryValue,
-    //   'state': stateValue,
-    //   'city': cityValue,
-    //   'zCode': zipcode
-    // });
+    if (uID != false) {
+      //get user child reference
+      DatabaseReference userRef =
+          FirebaseDatabase.instance.ref().child('users');
+      //push information under user/userID
+      userRef.child(uID.toString()).set({
+        'fName': fName,
+        'iNo': iNo,
+        'email': email,
+        'dob': dob,
+        'phone': mobileNo,
+        'avatar': imageUrl,
+        'address': address,
+        'country': countryValue,
+        'state': stateValue,
+        'city': cityValue,
+        'zCode': zipcode
+      });
+    }
 
     Fluttertoast.showToast(msg: "Account Created Successfully");
     Navigator.of(context).pushAndRemoveUntil(

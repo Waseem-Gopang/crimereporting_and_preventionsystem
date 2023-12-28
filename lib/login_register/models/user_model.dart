@@ -1,5 +1,7 @@
 //import '../../service/logger.dart';
 
+import 'package:firebase_database/firebase_database.dart';
+
 class User {
   bool isLoggedIn = false;
   String? uId;
@@ -17,8 +19,29 @@ class User {
   String? zipcode;
 
   //final _log = logger();
+  User({
+    required this.fName,
+    required this.email,
+    required this.mobileNo,
+    required this.uId,
+    this.avatar,
+    this.address,
+    this.city,
+    this.state,
+    this.country,
+    this.zipcode,
+  });
+  User.fromSnapshot(DataSnapshot dataSnapshot) {
+    uId = dataSnapshot.key!;
+    var data = dataSnapshot.value as Map?;
+    if (data != null) {
+      email = data["email"];
+      fName = data["UserName"];
+      mobileNo = data["Phone"];
+    }
+  }
 
-  User();
+  //User();
   User.otherUser(this.avatar, this.fName);
 
   void setUserInfo(String userID, Map data) {

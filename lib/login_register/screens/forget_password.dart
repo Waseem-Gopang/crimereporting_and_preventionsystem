@@ -1,10 +1,13 @@
 import 'package:crimereporting_and_preventionsystem/login_register/components/header_widget.dart';
+import 'package:crimereporting_and_preventionsystem/login_register/screens/login_screen.dart';
 import 'package:crimereporting_and_preventionsystem/utils/theme.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class ForgetPassword extends StatefulWidget {
-  const ForgetPassword({super.key});
+  const ForgetPassword({Key? key}) : super(key: key);
 
   @override
   State<ForgetPassword> createState() => _ForgetPasswordState();
@@ -13,139 +16,165 @@ class ForgetPassword extends StatefulWidget {
 class _ForgetPasswordState extends State<ForgetPassword> {
   final double _headerHeight = 250;
 
-  final Key _formKey = GlobalKey<FormState>();
+  final _formKey = GlobalKey<FormState>();
+  final emailController = TextEditingController();
+  late String email;
+
+  @override
+  void dispose() {
+    emailController.dispose();
+    super.dispose();
+  }
+
+  Future<void> resetPass(BuildContext context) async {
+    try {
+      await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
+      Get.snackbar(
+        "Success",
+        "Password reset link has been sent to your email",
+      );
+      // } on FirebaseAuthException catch (e) {
+      //   if (e.code == 'user-not-found') {
+      //     Get.snackbar("Failed", "No user found with this email");
+      //   } else {
+      //     Get.snackbar("Error", e.message ?? "An unexpected error occurred");
+      //   }
+    } catch (error) {
+      Get.snackbar("Error", error.toString());
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Colors.white,
-        body: SingleChildScrollView(
-            child: Column(children: [
-          SizedBox(
-            height: _headerHeight,
-            child: HeaderWidget(
-                _headerHeight), //let's create a common header widget
-          ),
-          SafeArea(
+      backgroundColor: Colors.white,
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            SizedBox(
+              height: _headerHeight,
+              child: HeaderWidget(_headerHeight),
+            ),
+            SafeArea(
               child: Container(
-            padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
-            margin: const EdgeInsets.fromLTRB(20, 10, 20, 10),
-            // This will be the login form
-            child: Column(children: [
-              const Text(
-                'Forget Password',
-                style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
-              ),
-              const Text(
-                'You can reset your Password here!',
-                style: TextStyle(color: Colors.grey),
-              ),
-              const SizedBox(height: 30.0),
-              Form(
-                  key: _formKey,
-                  child: Column(children: [
-                    getTextField(
-                      prefixIcon: const Icon(Icons.email_outlined),
-                      text: 'E-mail address',
-                      hint: 'Enter your email',
-                      validator: (val) {
-                        if (val!.isEmpty) {
-                          return 'Please enter your email';
-                        } else if ((val.isNotEmpty) &&
-                            !RegExp(r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?)*$")
-                                .hasMatch(val)) {
-                          return "Enter a valid email";
-                        }
-                        return null;
-                      },
+                padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
+                margin: const EdgeInsets.fromLTRB(20, 10, 20, 10),
+                child: Column(
+                  children: [
+                    const Text(
+                      'Forget Password',
+                      style:
+                          TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
+                    ),
+                    const Text(
+                      'You can reset your Password here!',
+                      style: TextStyle(color: Colors.grey),
+                    ),
+                    const SizedBox(height: 30.0),
+                    Form(
+                      key: _formKey,
+                      child: Column(
+                        children: [
+                          getTextField(
+                            prefixIcon: const Icon(Icons.email_outlined),
+                            text: 'E-mail address',
+                            hint: 'Enter your email',
+                            validator: (val) {
+                              if (val!.isEmpty) {
+                                return 'Please enter your email';
+                              } else if (!RegExp(
+                                      r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?)*$")
+                                  .hasMatch(val)) {
+                                return "Enter a valid email";
+                              }
+                              return null;
+                            },
+                            controller: emailController,
+                          ),
+                          const SizedBox(height: 15.0),
+                          Container(
+                            decoration:
+                                ThemeHelper().buttonBoxDecoration(context),
+                            child: ElevatedButton(
+                              style: ThemeHelper().buttonStyle(),
+                              child: Padding(
+                                padding:
+                                    const EdgeInsets.fromLTRB(40, 10, 40, 10),
+                                child: Text(
+                                  'Recover'.toUpperCase(),
+                                  style: const TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                              onPressed: () async {
+                                if (_formKey.currentState!.validate()) {
+                                  setState(() {
+                                    email = emailController.text;
+                                    resetPass(context);
+                                  });
+                                }
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                     const SizedBox(height: 15.0),
-                    getRecoverButton(),
-                    const SizedBox(height: 15.0),
-                    backToSignIn()
-                  ]))
-            ]),
-          ))
-        ])));
+                    backToSignIn(),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
-  getTextField(
-      {Icon? prefixIcon,
-      String? text,
-      String? hint,
-      String? valError,
-      IconButton? suffixIcon,
-      Function(String)? onChanged,
-      bool? isObscure,
-      String? Function(String?)? validator}) {
+  Widget getTextField({
+    required Icon prefixIcon,
+    required String text,
+    required String hint,
+    required String? Function(String?) validator,
+    required TextEditingController controller,
+  }) {
     return Container(
       padding: const EdgeInsets.only(bottom: 20),
       decoration: ThemeHelper().inputBoxDecorationShaddow(),
       child: TextFormField(
-        obscureText: isObscure ?? false,
-        decoration: ThemeHelper()
-            .textInputDecoration(prefixIcon!, text!, hint!, suffixIcon),
-        onChanged: onChanged,
-        validator: validator ??
-            (val) {
-              if (val!.isEmpty) {
-                return valError;
-              }
-              return null;
-            },
+        obscureText: false,
+        decoration:
+            ThemeHelper().textInputDecoration(prefixIcon, text, hint, null),
+        validator: validator,
+        controller: controller,
       ),
     );
   }
 
-  getRecoverButton() {
-    return Container(
-      decoration: ThemeHelper().buttonBoxDecoration(context),
-      child: ElevatedButton(
-        style: ThemeHelper().buttonStyle(),
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(40, 10, 40, 10),
-          child: Text(
-            'Recover'.toUpperCase(),
-            style: const TextStyle(
-                fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white),
-          ),
-        ),
-        onPressed: () async {
-          // var value = await signIn(email, pass);
-          // //check if user credentials are correct
-          // if (value != false) {
-          //   //assign userID
-          //   uID = value;
-          //   //get userInfo from database
-          //   userInfo = await getUserData(uID!);
-          //   //assign userID to global User instance
-          //   Global.instance.user!.setUserInfo(uID!, userInfo!);
-
-          //   Fluttertoast.showToast(msg: "User Logged In Successfully");
-          //   Navigator.of(context).pushNamedAndRemoveUntil(
-          //       '/home', (Route<dynamic> route) => false);
-          // }
-        },
-      ),
-    );
-  }
-
-  backToSignIn() {
+  Widget backToSignIn() {
     return Container(
       margin: const EdgeInsets.fromLTRB(10, 20, 10, 20),
-      //child: Text('Don\'t have an account? Create'),
-      child: Text.rich(TextSpan(children: [
-        const TextSpan(text: "Do you want to go back? "),
+      child: Text.rich(
         TextSpan(
-          text: 'Login',
-          recognizer: TapGestureRecognizer()
-            ..onTap = () {
-              Navigator.pushNamed(context, "/login");
-            },
-          style: TextStyle(
-              fontWeight: FontWeight.bold, color: Colors.redAccent.shade700),
+          children: [
+            const TextSpan(text: "Do you want to go back? "),
+            TextSpan(
+              text: 'Login',
+              recognizer: TapGestureRecognizer()
+                ..onTap = () {
+                  Navigator.pushNamed(context, "/login");
+                },
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: Colors.redAccent.shade700,
+              ),
+            ),
+          ],
         ),
-      ])),
+      ),
     );
   }
 }

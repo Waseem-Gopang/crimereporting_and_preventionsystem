@@ -1,8 +1,10 @@
+import 'package:crimereporting_and_preventionsystem/home.dart';
 import 'package:crimereporting_and_preventionsystem/login_register/screens/forget_password.dart';
 import 'package:crimereporting_and_preventionsystem/login_register/screens/login_screen.dart';
 import 'package:crimereporting_and_preventionsystem/login_register/screens/register_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'firebase_options.dart';
 
 void main() async {
@@ -56,7 +58,7 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return GetMaterialApp(
       title: 'Crime Reporting And Prevention System',
       theme: ThemeData(
         primarySwatch: Colors.blue,
@@ -64,7 +66,7 @@ class _MyAppState extends State<MyApp> {
       initialRoute: '/login',
       routes: {
         // '/':(context) => const SplashScreen(),
-        // '/home':(context) => const HomePage(),
+        '/home': (context) => const HomePage(),
         '/login': (context) => const LoginScreen(),
         '/register': (context) => const RegisterScreen(),
         '/forget password': (context) => const ForgetPassword(),

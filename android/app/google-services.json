@@ -12,7 +12,12 @@
           "package_name": "com.crimereportingandpreventionsystem"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "1083886211348-fkuid6qf1sn1j3rcq64utov9of37a20i.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyCQ8SyU59kIyFEsovsMVXwzMS6b7L2xx74"
@@ -20,7 +25,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1083886211348-fkuid6qf1sn1j3rcq64utov9of37a20i.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1083886211348-3bn6okd0arm28jbd0f7ldqe7aps02f52.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.crimereportingAndPreventionsystem.RunnerTests"
+              }
+            }
+          ]
         }
       }
     }
