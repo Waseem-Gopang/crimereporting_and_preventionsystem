@@ -1,5 +1,4 @@
 import 'package:crimereporting_and_preventionsystem/login_register/components/header_widget.dart';
-import 'package:crimereporting_and_preventionsystem/login_register/screens/login_screen.dart';
 import 'package:crimereporting_and_preventionsystem/utils/theme.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
@@ -33,12 +32,12 @@ class _ForgetPasswordState extends State<ForgetPassword> {
         "Success",
         "Password reset link has been sent to your email",
       );
-      // } on FirebaseAuthException catch (e) {
-      //   if (e.code == 'user-not-found') {
-      //     Get.snackbar("Failed", "No user found with this email");
-      //   } else {
-      //     Get.snackbar("Error", e.message ?? "An unexpected error occurred");
-      //   }
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'user-not-found') {
+        Get.snackbar("Failed", "No user found with this email");
+      } else {
+        Get.snackbar("Error", e.message ?? "An unexpected error occurred");
+      }
     } catch (error) {
       Get.snackbar("Error", error.toString());
     }

@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:crimereporting_and_preventionsystem/login_register/components/header_widget.dart';
+import 'package:crimereporting_and_preventionsystem/service/api.dart';
 import 'package:crimereporting_and_preventionsystem/service/firebase.dart';
 import 'package:crimereporting_and_preventionsystem/utils/theme.dart';
 import 'package:csc_picker/csc_picker.dart';
@@ -82,12 +83,21 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 fName = value;
                               });
                             }),
-
                         getTextField(
                             prefixIcon: const Icon(Icons.badge_outlined),
                             text: 'CNIC No.',
                             hint: 'Enter your CNIC No.',
                             valError: 'Please enter your CNIC No.',
+                            validator: (val) {
+                              if (val!.isEmpty) {
+                                return "Please enter your CNIC No.";
+                              } else if ((val.isNotEmpty) &&
+                                  !RegExp(r'^\d{5}-\d{7}-\d{1}$')
+                                      .hasMatch(val)) {
+                                return "Enter a valid Cnic No. with dashes";
+                              }
+                              return null;
+                            },
                             onChanged: (value) {
                               setState(() {
                                 iNo = value;
@@ -226,8 +236,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             if (val!.isEmpty) {
                               return "Please enter the mobile number";
                             } else if ((val.isNotEmpty) &&
-                                !RegExp(r"^(\d+)*$").hasMatch(val)) {
-                              return "Enter a valid mobile number";
+                                !RegExp(r'^\92[3456789]\d{9}$').hasMatch(val)) {
+                              return "Enter a valid mobile number like 923001283753";
                             }
                             return null;
                           },
@@ -255,13 +265,21 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           text: 'Zip Code',
                           hint: 'Enter your zip code',
                           valError: 'Please enter your zip code',
+                          validator: (val) {
+                            if (val!.isEmpty) {
+                              return "Please enter your Zip Code ";
+                            } else if ((val.isNotEmpty) &&
+                                !RegExp(r'^\d{5}$').hasMatch(val)) {
+                              return "Enter a valid ZipCode like 66120 for Kumb Town";
+                            }
+                            return null;
+                          },
                           onChanged: (value) {
                             setState(() {
                               zipcode = value;
                             });
                           },
                         ),
-                        // getTermCheckBox(),
                         getRegisterButton(),
                         redirectToLogin()
                       ],
@@ -421,53 +439,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
         ));
   }
 
-  // getTermCheckBox() {
-  //   return FormField<bool>(
-  //     builder: (state) {
-  //       return Column(
-  //         children: <Widget>[
-  //           Row(
-  //             children: <Widget>[
-  //               Checkbox(
-  //                   activeColor: Colors.red.shade900,
-  //                   value: checkboxValue,
-  //                   onChanged: (value) {
-  //                     setState(() {
-  //                       checkboxValue = value!;
-  //                       state.didChange(value);
-  //                     });
-  //                   }),
-  //               const Text(
-  //                 "I agree to the Terms and Conditions "
-  //                 "\nand Privacy Policy.",
-  //                 style: TextStyle(color: Colors.grey),
-  //               ),
-  //             ],
-  //           ),
-  //           Container(
-  //             alignment: Alignment.centerLeft,
-  //             child: Text(
-  //               state.errorText ?? '',
-  //               textAlign: TextAlign.left,
-  //               style: TextStyle(
-  //                 color: Theme.of(context).colorScheme.error,
-  //                 fontSize: 12,
-  //               ),
-  //             ),
-  //           )
-  //         ],
-  //       );
-  //     },
-  //     validator: (value) {
-  //       if (!checkboxValue) {
-  //         return 'You need to accept terms and conditions';
-  //       } else {
-  //         return null;
-  //       }
-  //     },
-  //   );
-  // }
-
   getRegisterButton() {
     return Padding(
       padding: const EdgeInsets.only(bottom: 10.0),
@@ -506,7 +477,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     //create user account
     uID = await createAccount(email, pass, iNo);
     //check if avatar uploaded
-    //imageUrl = image != null ? await uploadImage(file: image!) : "";
+    imageUrl = image != null ? await uploadImage(file: image!) : "";
     //check if user account created
     if (uID != false) {
       //get user child reference

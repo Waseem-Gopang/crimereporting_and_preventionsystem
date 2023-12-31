@@ -1,11 +1,10 @@
 import 'package:crimereporting_and_preventionsystem/login_register/components/header_widget.dart';
-import 'package:crimereporting_and_preventionsystem/login_register/models/user_model.dart';
 import 'package:crimereporting_and_preventionsystem/service/firebase.dart';
 import 'package:crimereporting_and_preventionsystem/utils/theme.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:get/get.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -174,10 +173,10 @@ class _LoginScreenState extends State<LoginScreen> {
                                   onPressed: () async {
                                     var user = await signInWithGoogle();
                                     if (user != null) {
-                                      print(
-                                          "Google Sign-In Successful: ${user.displayName}");
-                                    } else {
-                                      print("Google Sign-In Failed");
+                                      Fluttertoast.showToast(
+                                          msg:
+                                              "You have successfully loged in by Google Account");
+                                      Get.toNamed('/home');
                                     }
                                   },
                                   icon: CircleAvatar(
@@ -189,24 +188,11 @@ class _LoginScreenState extends State<LoginScreen> {
                                 ),
                                 IconButton(
                                   onPressed: () async {
-                                    var twitterUser = await signInWithTwitter();
-                                    if (twitterUser != null) {
-                                      // Handle successful Twitter login
-                                      print(
-                                          'Twitter User ID: ${twitterUser.uid}');
-                                      print(
-                                          'Twitter Display Name: ${twitterUser.displayName}');
-                                      print(
-                                          'Twitter Email: ${twitterUser.email}');
-                                    } else {
-                                      // Handle Twitter login failure
-                                      print('Twitter login failed');
-                                    }
+                                    await signInWithTwitter();
                                   },
                                   icon: CircleAvatar(
                                     radius: 35,
-                                    child: Image.asset(
-                                        'assets/icons/linkedin.png'),
+                                    child: Image.asset('assets/icons/x.png'),
                                   ),
                                 ),
                               ],

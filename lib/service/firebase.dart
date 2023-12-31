@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
@@ -22,7 +23,7 @@ Future signIn(String email, String password) async {
     return user.uid;
   } catch (e) {
     Fluttertoast.showToast(msg: e.toString());
-    print(e);
+    Get.snackbar("Error:", e.toString(), duration: const Duration(seconds: 15));
     return false;
   }
 }
@@ -41,7 +42,7 @@ Future createAccount(String email, String password, String iNo) async {
     }
     return false;
   } catch (e) {
-    print(e.toString());
+    Get.snackbar("Error:", e.toString(), duration: const Duration(seconds: 15));
   }
 }
 
@@ -53,8 +54,8 @@ Future<String> fetchUserID() async {
 final FirebaseAuth _auth = FirebaseAuth.instance;
 final GoogleSignIn googleSignIn = GoogleSignIn();
 final TwitterLogin twitterLogin = TwitterLogin(
-  apiKey: 'nYzaVyn9f5t9nyk7QZMIDooUW',
-  apiSecretKey: 'hccDtYqBGo0rtFj1SkXtsvAKZZ6LQU0Tx7GS2ZmtmvJAv4UM32',
+  apiKey: '0oUdRVhd4QeRol3h437O9o4j5',
+  apiSecretKey: '8h4c6fFZgVxBawQiih9S9nglZR3tGTRxnqIDVMBkvKezVyVEMu',
   redirectURI:
       'https://crimereportingandprevent-22511.firebaseapp.com/__/auth/handler',
 );
@@ -77,7 +78,8 @@ Future<User?> signInWithGoogle() async {
 
     return user;
   } catch (e) {
-    print("Google Sign-In Error: $e");
+    Get.snackbar("Google Sign-In Error: ", e.toString(),
+        duration: const Duration(seconds: 15));
     return null;
   }
 }
@@ -93,49 +95,64 @@ Future<void> signInWithFacebook() async {
 
       final UserCredential authResult =
           await FirebaseAuth.instance.signInWithCredential(credential);
-      final User user = authResult.user!;
-
-      print('User ID: ${user.uid}');
-      print('Display Name: ${user.displayName}');
-      print('Email: ${user.email}');
+      final User? user = authResult.user;
+      if (user != null) {
+        Fluttertoast.showToast(
+            msg: "You have successfully loged in by Facebook Account");
+        Get.toNamed('/home');
+      }
     } else {
-      print('Facebook login failed');
+      Get.snackbar('Facebook login failed', "",
+          duration: const Duration(seconds: 15));
+    }
+  } catch (e) {
+    Get.snackbar('Error:', e.toString(), duration: const Duration(seconds: 15));
+  }
+}
+
+Future<void> signInWithTwitter() async {
+  try {
+    final result = await twitterLogin.login();
+
+    switch (result.status) {
+      case TwitterLoginStatus.loggedIn:
+        final AuthCredential credential = TwitterAuthProvider.credential(
+          accessToken: result.authToken!,
+          secret: result.authTokenSecret!,
+        );
+
+        final UserCredential authResult =
+            await FirebaseAuth.instance.signInWithCredential(credential);
+        final User user = authResult.user!;
+
+        print('User ID: ${user.uid}');
+        print('Display Name: ${user.displayName}');
+        print('Email: ${user.email}');
+
+        // Navigate to the homepage after successful login
+        // Assuming you have a Navigator named 'navigatorKey' in your app
+        Get.to('/home');
+
+        break;
+
+      case TwitterLoginStatus.cancelledByUser:
+        print('Twitter login canceled by user');
+        break;
+
+      case TwitterLoginStatus.error:
+        print('Twitter login error: ${result.errorMessage}');
+        break;
+      case null:
+      // TODO: Handle this case.
     }
   } catch (e) {
     print('Error: $e');
   }
 }
 
-Future<User?> signInWithTwitter() async {
-  final result = await twitterLogin.login();
-
-  switch (result.status) {
-    case TwitterLoginStatus.loggedIn:
-      final AuthCredential credential = TwitterAuthProvider.credential(
-        accessToken: result.authToken!,
-        secret: result.authTokenSecret!,
-      );
-
-      final UserCredential authResult =
-          await FirebaseAuth.instance.signInWithCredential(credential);
-      return authResult.user;
-
-    case TwitterLoginStatus.cancelledByUser:
-      print('Twitter login canceled by user');
-      return null;
-
-    case TwitterLoginStatus.error:
-      print('Twitter login error: ${result.errorMessage}');
-      return null;
-    case null:
-    // TODO: Handle this case.
-  }
-  return null;
-}
-
 Future signOut() async {
-  await FirebaseAuth.instance.signOut();
-  await googleSignIn.signOut();
+  //await FirebaseAuth.instance.signOut();
+  //await googleSignIn.signOut();
   //await Global.instance.logout();
 }
 
@@ -181,7 +198,7 @@ Future getSOSData(String userId) async {
 Future getRecipientContact(String userId) async {
   List<String> recipientList = [];
   final contactRef = FirebaseDatabase.instance.ref().child('contacts/$userId');
-  await contactRef.onValue.listen((event) async {
+  contactRef.onValue.listen((event) async {
     for (final child in event.snapshot.children) {
       final contactID = await json.decode(json.encode(child.key));
       Map data = await json.decode(json.encode(child.value));

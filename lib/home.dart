@@ -14,56 +14,54 @@ class _HomePageState extends State<HomePage> {
       // appBar: customAppBar(
       //     title: 'Home Page'
       // ),
-      body: Container(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                homepageButton(
-                    "Crime Alerts",
-                    'Locate the crimes in the nearby areas',
-                    '/crimeAlert',
-                    Icons.map),
-                homepageButton(
-                    "Crime Report",
-                    'File a crime report anywhere, anytime with ease',
-                    '/crimeReport',
-                    Icons.local_police),
-              ],
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              homepageButton(
+                  "Crime Alerts",
+                  'Locate the crimes in the nearby areas',
+                  '/crimeAlert',
+                  Icons.map),
+              homepageButton(
+                  "Crime Report",
+                  'File a crime report anywhere, anytime with ease',
+                  '/crimeReport',
+                  Icons.local_police),
+            ],
+          ),
+          const SizedBox(
+            height: 50,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              homepageButton(
+                  "Post Feed",
+                  'Get and share the latest info, missing reports, alerts and more',
+                  '/postFeed',
+                  Icons.dynamic_feed),
+              homepageButton(
+                  "Account",
+                  'Manage your account, emergency contacts and other settings',
+                  '/account',
+                  Icons.person)
+            ],
+          ),
+          Container(
+            margin: const EdgeInsets.fromLTRB(10, 30, 10, 0),
+            child: Text(
+              "For further information or assistance,",
+              style: TextStyle(
+                  color: Colors.grey.shade900,
+                  fontSize: 13,
+                  fontWeight: FontWeight.bold),
             ),
-            SizedBox(
-              height: 50,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                homepageButton(
-                    "Post Feed",
-                    'Get and share the latest info, missing reports, alerts and more',
-                    '/postFeed',
-                    Icons.dynamic_feed),
-                homepageButton(
-                    "Account",
-                    'Manage your account, emergency contacts and other settings',
-                    '/account',
-                    Icons.person)
-              ],
-            ),
-            Container(
-              margin: EdgeInsets.fromLTRB(10, 30, 10, 0),
-              child: Text(
-                "For further information or assistance,",
-                style: TextStyle(
-                    color: Colors.grey.shade900,
-                    fontSize: 13,
-                    fontWeight: FontWeight.bold),
-              ),
-            ),
-            redirectToHelpCenter(),
-          ],
-        ),
+          ),
+          redirectToHelpCenter(),
+        ],
       ),
       // bottomNavigationBar: CustomBottomNavigationBar(
       //   defaultSelectedIndex: 2,
@@ -77,9 +75,9 @@ class _HomePageState extends State<HomePage> {
       child: Container(
           width: 180,
           height: 200,
-          decoration: new BoxDecoration(
+          decoration: BoxDecoration(
             color: Colors.red.shade900.withOpacity(0.1), // border color
-            borderRadius: new BorderRadius.all(Radius.circular(10.0)),
+            borderRadius: const BorderRadius.all(Radius.circular(10.0)),
           ),
           child: Padding(
             padding: const EdgeInsets.only(top: 15, bottom: 15, right: 10),
@@ -104,11 +102,12 @@ class _HomePageState extends State<HomePage> {
                               children: [
                                 Text(
                                   text,
-                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                  style: const TextStyle(
+                                      fontWeight: FontWeight.bold),
                                 ),
                                 Container(
                                   width: 155,
-                                  padding: EdgeInsets.only(right: 10),
+                                  padding: const EdgeInsets.only(right: 10),
                                   child: Text(
                                     info,
                                     style: TextStyle(
@@ -131,9 +130,9 @@ class _HomePageState extends State<HomePage> {
     return Container(
       width: 55,
       height: 55,
-      decoration: new BoxDecoration(
+      decoration: const BoxDecoration(
         color: Colors.white, // border color
-        borderRadius: new BorderRadius.all(Radius.circular(40.0)),
+        borderRadius: BorderRadius.all(Radius.circular(40.0)),
       ),
       child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -147,7 +146,7 @@ class _HomePageState extends State<HomePage> {
         Navigator.of(context).pushNamed('/helpCenter');
       },
       child: Container(
-        margin: EdgeInsets.fromLTRB(10, 20, 10, 20),
+        margin: const EdgeInsets.fromLTRB(10, 20, 10, 20),
         child: Text(
           'Go To Help Center',
           style: TextStyle(

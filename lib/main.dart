@@ -4,6 +4,7 @@ import 'package:crimereporting_and_preventionsystem/login_register/screens/login
 import 'package:crimereporting_and_preventionsystem/login_register/screens/register_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'firebase_options.dart';
 
