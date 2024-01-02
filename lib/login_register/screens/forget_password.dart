@@ -28,18 +28,23 @@ class _ForgetPasswordState extends State<ForgetPassword> {
   Future<void> resetPass(BuildContext context) async {
     try {
       await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
-      Get.snackbar(
-        "Success",
-        "Password reset link has been sent to your email",
-      );
+      Get.snackbar("Success", "Password reset link has been sent to your email",
+          duration: const Duration(seconds: 7),
+          backgroundColor: Colors.lightBlueAccent);
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
-        Get.snackbar("Failed", "No user found with this email");
+        Get.snackbar("Failed", "No user found with this email",
+            duration: const Duration(seconds: 7),
+            backgroundColor: Colors.lightBlueAccent);
       } else {
-        Get.snackbar("Error", e.message ?? "An unexpected error occurred");
+        Get.snackbar("Error", e.message ?? "An unexpected error occurred",
+            duration: const Duration(seconds: 7),
+            backgroundColor: Colors.lightBlueAccent);
       }
     } catch (error) {
-      Get.snackbar("Error", error.toString());
+      Get.snackbar("Error", error.toString(),
+          duration: const Duration(seconds: 7),
+          backgroundColor: Colors.lightBlueAccent);
     }
   }
 

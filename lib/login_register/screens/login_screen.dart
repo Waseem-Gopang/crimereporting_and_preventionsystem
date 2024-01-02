@@ -3,7 +3,6 @@ import 'package:crimereporting_and_preventionsystem/service/firebase.dart';
 import 'package:crimereporting_and_preventionsystem/utils/theme.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -148,7 +147,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                   ),
                                   Expanded(
                                     child: Divider(
-                                      thickness: 0.5,
+                                      thickness: 0.8,
                                       color: Colors.grey.shade400,
                                     ),
                                   ),
@@ -173,10 +172,12 @@ class _LoginScreenState extends State<LoginScreen> {
                                   onPressed: () async {
                                     var user = await signInWithGoogle();
                                     if (user != null) {
-                                      Fluttertoast.showToast(
-                                          msg:
-                                              "You have successfully loged in by Google Account");
-                                      Get.toNamed('/home');
+                                      Get.snackbar("Congratulation!",
+                                          "You have successfully Signed In.",
+                                          duration: const Duration(seconds: 5),
+                                          backgroundColor: Colors.green,
+                                          colorText: Colors.white);
+                                      Get.offAllNamed('/home');
                                     }
                                   },
                                   icon: CircleAvatar(
@@ -188,11 +189,12 @@ class _LoginScreenState extends State<LoginScreen> {
                                 ),
                                 IconButton(
                                   onPressed: () async {
-                                    await signInWithTwitter();
+                                    await githubLogin(context);
                                   },
                                   icon: CircleAvatar(
                                     radius: 35,
-                                    child: Image.asset('assets/icons/x.png'),
+                                    child:
+                                        Image.asset('assets/icons/github.png'),
                                   ),
                                 ),
                               ],
@@ -277,10 +279,13 @@ class _LoginScreenState extends State<LoginScreen> {
             // userInfo = await getUserData(uID!);
             //assign userID to global User instance
             //  Global.instance.user!.setUserInfo(uID!, userInfo!);
-
-            Fluttertoast.showToast(msg: "User Logged In Successfully");
-            Navigator.of(context).pushNamedAndRemoveUntil(
-                '/home', (Route<dynamic> route) => false);
+            Get.snackbar("Congratulation!", "You have successfully Signed In.",
+                duration: const Duration(seconds: 5),
+                backgroundColor: Colors.green,
+                colorText: Colors.white);
+            Get.offAllNamed("/home");
+            // Navigator.of(context).pushNamedAndRemoveUntil(
+            //     '/home', (Route<dynamic> route) => false);
           }
         },
       ),

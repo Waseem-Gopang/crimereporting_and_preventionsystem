@@ -8,6 +8,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'login_screen.dart';
@@ -499,10 +500,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
       });
     }
 
-    Fluttertoast.showToast(msg: "Account Created Successfully");
-    Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute(builder: (context) => const LoginScreen()),
-        (Route<dynamic> route) => false);
+    Get.snackbar("Congratulation!", "Account Created Successfully.",
+        duration: const Duration(seconds: 5),
+        backgroundColor: Colors.green,
+        colorText: Colors.white);
+    Get.offAllNamed("/login");
   }
 
   redirectToLogin() {
