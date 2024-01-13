@@ -1,7 +1,12 @@
+import 'package:crimereporting_and_preventionsystem/awareness/awareness_screen.dart';
+import 'package:crimereporting_and_preventionsystem/crime_location/screens/crime_location_screen.dart';
+import 'package:crimereporting_and_preventionsystem/crime_report/screens/crime_report_screen.dart';
+import 'package:crimereporting_and_preventionsystem/emergency_official/grid_dashboard.dart';
 import 'package:crimereporting_and_preventionsystem/home.dart';
 import 'package:crimereporting_and_preventionsystem/login_register/screens/forget_password.dart';
 import 'package:crimereporting_and_preventionsystem/login_register/screens/login_screen.dart';
 import 'package:crimereporting_and_preventionsystem/login_register/screens/register_screen.dart';
+import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
@@ -20,7 +25,7 @@ void main() async {
   //           channelName: 'Basic notifications',
   //           channelDescription: 'Notification channel for basic tests',
   //           )],);
-
+  await FirebaseAppCheck.instance.activate();
   runApp(const MyApp());
 }
 
@@ -63,9 +68,10 @@ class _MyAppState extends State<MyApp> {
         '/login': (context) => const LoginScreen(),
         '/register': (context) => const RegisterScreen(),
         '/forget password': (context) => const ForgetPassword(),
-        // '/account':(context) => const AccountScreen(),
-        // '/crimeAlert':(context) => const CrimeAlertsScreen(),
-        // '/crimeReport':(context) => const CrimeReportScreen(),
+        '/emergency Official': (context) => const GridDashboard(),
+        '/crimeAlert': (context) => const CrimeAlertsScreen(),
+        '/crimeReport': (context) => const CrimeReportScreen(),
+        '/awareness': (context) => const Awareness()
         // '/postFeed':(context) => const PostFeedScreen(),
         // '/editProfile':(context) => const EditProfile(),
         // '/manageContact':(context) => const ManageEmergencyContact(),

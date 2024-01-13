@@ -3,10 +3,13 @@
     <application
         android:label="crimereporting_and_preventionsystem"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/ic_launcher"
+        android:requestLegacyExternalStorage="true">
+
 
         <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/facebook_app_id"/>
         <meta-data android:name="com.facebook.sdk.ClientToken" android:value="@string/facebook_client_token"/>
+        
         
         <activity
             android:name=".MainActivity"
@@ -44,5 +47,8 @@
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
+        <meta-data
+           android:name="com.google.android.geo.API_KEY"
+           android:value="AIzaSyCgHCbmvovZvbTqg-DUBRWUm8HVJfVfXsY" />
     </application>
 </manifest>

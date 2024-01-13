@@ -1,3 +1,5 @@
+import 'package:crimereporting_and_preventionsystem/utils/bottom_navbar.dart';
+import 'package:crimereporting_and_preventionsystem/utils/custom_widget.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
@@ -11,9 +13,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: customAppBar(
-      //     title: 'Home Page'
-      // ),
+      appBar: customAppBar(title: 'Home Page'),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -21,51 +21,40 @@ class _HomePageState extends State<HomePage> {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               homepageButton(
-                  "Crime Alerts",
-                  'Locate the crimes in the nearby areas',
+                  "Crime Locations",
+                  'Locate the past crimes occurred in your nearby areas!',
                   '/crimeAlert',
                   Icons.map),
               homepageButton(
                   "Crime Report",
-                  'File a crime report anywhere, anytime with ease',
+                  'File a crime report anywhere, anytime with ease!',
                   '/crimeReport',
-                  Icons.local_police),
+                  Icons.local_police_outlined),
             ],
           ),
           const SizedBox(
-            height: 50,
+            height: 40,
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               homepageButton(
-                  "Post Feed",
-                  'Get and share the latest info, missing reports, alerts and more',
-                  '/postFeed',
-                  Icons.dynamic_feed),
+                  "Awareness",
+                  "Let's stand united against crime.Together, we can make a difference!",
+                  '/awareness',
+                  Icons.remove_red_eye_outlined),
               homepageButton(
-                  "Account",
-                  'Manage your account, emergency contacts and other settings',
-                  '/account',
-                  Icons.person)
+                  "Emergency Officials",
+                  'Easy access to Emergency officials such as their locations,numbers and much more!',
+                  '/emergency Official',
+                  Icons.contact_emergency_sharp)
             ],
           ),
-          Container(
-            margin: const EdgeInsets.fromLTRB(10, 30, 10, 0),
-            child: Text(
-              "For further information or assistance,",
-              style: TextStyle(
-                  color: Colors.grey.shade900,
-                  fontSize: 13,
-                  fontWeight: FontWeight.bold),
-            ),
-          ),
-          redirectToHelpCenter(),
         ],
       ),
-      // bottomNavigationBar: CustomBottomNavigationBar(
-      //   defaultSelectedIndex: 2,
-      // ),
+      bottomNavigationBar: const CustomBottomNavigationBar(
+        defaultSelectedIndex: 2,
+      ),
     );
   }
 
@@ -137,24 +126,6 @@ class _HomePageState extends State<HomePage> {
       child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [Icon(icon, size: 40, color: Colors.red.shade900)]),
-    );
-  }
-
-  redirectToHelpCenter() {
-    return GestureDetector(
-      onTap: () {
-        Navigator.of(context).pushNamed('/helpCenter');
-      },
-      child: Container(
-        margin: const EdgeInsets.fromLTRB(10, 20, 10, 20),
-        child: Text(
-          'Go To Help Center',
-          style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 15,
-              color: Colors.redAccent.shade700),
-        ),
-      ),
     );
   }
 }

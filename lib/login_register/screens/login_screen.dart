@@ -22,7 +22,6 @@ class _LoginScreenState extends State<LoginScreen> {
   String? uID;
 
   Map? userInfo;
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -283,7 +282,8 @@ class _LoginScreenState extends State<LoginScreen> {
                 duration: const Duration(seconds: 5),
                 backgroundColor: Colors.green,
                 colorText: Colors.white);
-            Get.offAllNamed("/home");
+            Get.toNamed("/home");
+
             // Navigator.of(context).pushNamedAndRemoveUntil(
             //     '/home', (Route<dynamic> route) => false);
           }

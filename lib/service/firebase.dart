@@ -150,9 +150,9 @@ Future<void> githubLogin(BuildContext context) async {
 }
 
 //sign out method
-Future signOut() async {
-  await FirebaseAuth.instance.signOut();
-}
+// Future signOut() async {
+//   await FirebaseAuth.instance.signOut();
+// }
 
 //method for checking users having same cnic no.
 Future checkUserExist(String idNo) async {
