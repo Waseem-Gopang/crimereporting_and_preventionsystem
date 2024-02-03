@@ -1,3 +1,5 @@
+import 'package:crimereporting_and_preventionsystem/utils/bottom_navbar.dart';
+import 'package:crimereporting_and_preventionsystem/utils/custom_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
@@ -13,10 +15,10 @@ class _AwarenessState extends State<Awareness> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Awareness Laws"),
-      ),
+      appBar: customAppBar(title: "Awareness Laws"),
       body: buildGridView(),
+      bottomNavigationBar:
+          const CustomBottomNavigationBar(defaultSelectedIndex: 3),
     );
   }
 
@@ -57,7 +59,7 @@ class _AwarenessState extends State<Awareness> {
             children: [
               Image.asset(
                 pdfData[index]["image"]!,
-                height: 120,
+                height: 100,
                 width: 100,
               ),
               Text(
@@ -99,7 +101,7 @@ class _PdfScreenState extends State<PdfScreen> {
     try {
       String downloadURL = await firebase_storage.FirebaseStorage.instance
           .ref()
-          .child('pdffiles/${widget.pdfName}.pdf')
+          .child('LegalDocuments/${widget.pdfName}.pdf')
           .getDownloadURL();
 
       setState(() {
@@ -113,13 +115,14 @@ class _PdfScreenState extends State<PdfScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.pdfName!),
+      appBar: customAppBar(
+        title: widget.pdfName!,
       ),
       body: pdfUrl.isNotEmpty
           ? SfPdfViewer.network(
               pdfUrl,
               canShowPaginationDialog: true,
+              canShowScrollHead: true,
             )
           : const Center(child: CircularProgressIndicator()),
     );
@@ -127,7 +130,25 @@ class _PdfScreenState extends State<PdfScreen> {
 }
 
 List<Map<String, String>> pdfData = [
-  {"name": "20sw002", "image": "assets/pdf1.png"},
-  {"name": "Sentence-Correction", "image": "assets/pdf2.png"},
-  {"name": "PDF 3", "image": "assets/pdf3.png"},
+  {"name": "Pakistan Penal Code", "image": "assets/LegalDocuments/ppc.jpg"},
+  {
+    "name": "Anti-Terrorism-Act-1997",
+    "image": "assets/LegalDocuments/Anti-Terrorism Act.png"
+  },
+  {
+    "name": "Prevention of Electronic crimes Act",
+    "image": "assets/LegalDocuments/Prevention of Electronic crimes Act.jpg"
+  },
+  {
+    "name": "Prevention of Trafficking in persons Act",
+    "image": "assets/LegalDocuments/trafficking.png"
+  },
+  {
+    "name": "Police Laws and Criminal Procedure",
+    "image": "assets/LegalDocuments/police laws and criminal procedure.jpg"
+  },
+  {
+    "name": "Code of criminal procedure 1898",
+    "image": "assets/LegalDocuments/Code of criminal procedure.jpg"
+  }
 ];

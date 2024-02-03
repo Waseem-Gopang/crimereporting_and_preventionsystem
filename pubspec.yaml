@@ -98,11 +98,11 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/icons/
+    - assets/LegalDocuments/
     - assets/ambulance.png
     - assets/fire-truck.png
     - assets/hospital.png
     - assets/policeman.png
-    - assets/emergencyAppLogo.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:crimereporting_and_preventionsystem/emergency_official/message_sending.dart';
+import 'package:crimereporting_and_preventionsystem/utils/custom_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
@@ -13,49 +14,7 @@ class FireFighterOptions extends StatelessWidget {
   Widget build(BuildContext context) {
     final smsController = Get.put(MessageController());
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.lightBlueAccent,
-        centerTitle: true,
-        automaticallyImplyLeading: false,
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(
-            bottom: Radius.circular(40),
-          ),
-        ),
-        bottom: PreferredSize(
-            preferredSize: Size.fromHeight(Get.height * 0.13),
-            child: Container(
-              padding: const EdgeInsets.only(bottom: 15),
-              child: Column(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Image(
-                          image:
-                              const AssetImage("assets/emergencyAppLogo.png"),
-                          height: Get.height * 0.1),
-                    ],
-                  ),
-                  Container(
-                    margin: const EdgeInsets.only(top: 8),
-                    child: const Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          "Fire Fighter Options",
-                          style: TextStyle(
-                              fontSize: 28,
-                              fontWeight: FontWeight.w700,
-                              color: Colors.white),
-                        ),
-                      ],
-                    ),
-                  )
-                ],
-              ),
-            )),
-      ),
+      appBar: customAppBar(title: 'Fire Fighter Options'),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(
@@ -68,7 +27,7 @@ class FireFighterOptions extends StatelessWidget {
                     Radius.circular(15.0),
                   ),
                 ),
-                tileColor: Colors.blue.shade300,
+                tileColor: Colors.greenAccent,
                 leading: const Icon(Icons.map),
                 title: const Text('Fire Station Map Display'),
                 subtitle:
@@ -98,7 +57,7 @@ class FireFighterOptions extends StatelessWidget {
                       Radius.circular(15.0),
                     ),
                   ),
-                  tileColor: Colors.blue.shade600,
+                  tileColor: Colors.limeAccent,
                   leading: const Icon(Icons.call),
                   title: const Text('Call'),
                   subtitle:
@@ -122,7 +81,7 @@ class FireFighterOptions extends StatelessWidget {
                     Radius.circular(15.0),
                   ),
                 ),
-                tileColor: const Color(0xfff85757),
+                tileColor: Colors.purpleAccent,
                 leading: const Icon(Icons.message),
                 title: const Text('Send Distress Message'),
                 subtitle:

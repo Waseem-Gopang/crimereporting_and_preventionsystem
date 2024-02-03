@@ -98,7 +98,7 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
         Navigator.pushReplacementNamed(context, "/home");
         break;
       case 3:
-        Navigator.pushReplacementNamed(context, "/postFeed");
+        Navigator.pushReplacementNamed(context, "/awareness");
         break;
       case 4:
         Navigator.pushReplacementNamed(context, "/emergency Official");

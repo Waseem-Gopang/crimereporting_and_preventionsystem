@@ -59,7 +59,7 @@ class _CrimeReportScreenState extends State<CrimeReportScreen> {
   void selectFiles() async {
     final result = await FilePicker.platform.pickFiles(
         type: FileType.custom,
-        allowedExtensions: ['jpg', 'png', 'pdf', 'mp3', 'mp4', 'jpeg'],
+        allowedExtensions: ['jpg', 'png', 'mp4', 'jpeg'],
         allowMultiple: true);
     if (result == null) return;
 
