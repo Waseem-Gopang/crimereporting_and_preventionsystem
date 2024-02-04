@@ -159,7 +159,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               children: [
                                 IconButton(
                                   onPressed: () async {
-                                    await signInWithFacebook();
+                                    await AuthService().signInWithFacebook();
                                   },
                                   icon: CircleAvatar(
                                     radius: 35,
@@ -169,7 +169,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                 ),
                                 IconButton(
                                   onPressed: () async {
-                                    var user = await signInWithGoogle();
+                                    var user =
+                                        await AuthService().signInWithGoogle();
                                     if (user != null) {
                                       Get.snackbar("Congratulation!",
                                           "You have successfully Signed In.",
@@ -188,7 +189,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 ),
                                 IconButton(
                                   onPressed: () async {
-                                    await githubLogin(context);
+                                    await AuthService().githubLogin(context);
                                   },
                                   icon: CircleAvatar(
                                     radius: 35,
@@ -269,11 +270,11 @@ class _LoginScreenState extends State<LoginScreen> {
           ),
         ),
         onPressed: () async {
-          var value = await signIn(email, pass);
+          var value = AuthService().signIn(email, pass);
           //check if user credentials are correct
           if (value != false) {
             //assign userID
-            uID = value;
+            //uID = value;
             //get userInfo from database
             // userInfo = await getUserData(uID!);
             //assign userID to global User instance

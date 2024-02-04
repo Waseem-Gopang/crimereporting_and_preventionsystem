@@ -24,7 +24,7 @@ class CrimeReportScreen extends StatefulWidget {
   State<CrimeReportScreen> createState() => _CrimeReportScreenState();
 }
 
-const kGoogleApiKey = 'AIzaSyCgHCbmvovZvbTqg-DUBRWUm8HVJfVfXsY';
+const ApiKey = 'AIzaSyCgHCbmvovZvbTqg-DUBRWUm8HVJfVfXsY';
 
 class _CrimeReportScreenState extends State<CrimeReportScreen> {
   final _formKey = GlobalKey<FormState>();
@@ -74,8 +74,7 @@ class _CrimeReportScreenState extends State<CrimeReportScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: customAppBar(title: 'Crime Report'),
-      body: //Global.instance.user!.isLoggedIn ?
-          ListView(children: [
+      body: ListView(children: [
         SafeArea(
           child: Form(
             key: _formKey,
@@ -105,44 +104,7 @@ class _CrimeReportScreenState extends State<CrimeReportScreen> {
             ),
           ),
         ),
-      ]) //:
-      // Container(
-      //   padding: EdgeInsets.symmetric(horizontal: 40),
-      //   child: Column(
-      //     mainAxisAlignment: MainAxisAlignment.center,
-      //     crossAxisAlignment: CrossAxisAlignment.center,
-      //     children: [
-      //       Container(
-      //         padding: EdgeInsets.all(10),
-      //         child: Text("Please Log In or Register to Continue!",
-      //           style: TextStyle(
-      //             fontSize: 15,
-      //           ),),
-      //       ),
-      //       Container(
-      //         child: getCustomButton(
-      //             text: "Sign In",
-      //             padding: 115,
-      //             background: Colors.black,
-      //             fontSize: 20,
-      //             onPressed: () {
-      //               Navigator.pushNamed(context, '/login');
-      //             }),
-      //       ),
-      //       Container(
-      //         child: getCustomButton(
-      //             text: "Register",
-      //             padding: 110,
-      //             background: Colors.red.shade900,
-      //             fontSize: 20,
-      //             onPressed: () {
-      //               Navigator.pushNamed(context, '/register');
-      //             }),
-      //       ),
-      //     ],
-      //   ),
-      // ),
-      ,
+      ]),
       bottomNavigationBar: const CustomBottomNavigationBar(
         defaultSelectedIndex: 1,
       ),
@@ -193,7 +155,7 @@ class _CrimeReportScreenState extends State<CrimeReportScreen> {
   Future<void> _handlePressButton() async {
     Prediction? p = await PlacesAutocomplete.show(
         context: context,
-        apiKey: kGoogleApiKey,
+        apiKey: ApiKey,
         language: 'en',
         mode: _mode,
         strictbounds: false,
@@ -216,12 +178,14 @@ class _CrimeReportScreenState extends State<CrimeReportScreen> {
       setState(() {
         location = "${p.terms[0].value} ${p.terms[1].value}";
       });
+    } else {
+      print("p is giving null value");
     }
   }
 
   Future<void> displayPrediction(Prediction p) async {
     GoogleMapsPlaces places = GoogleMapsPlaces(
-        apiKey: kGoogleApiKey,
+        apiKey: ApiKey,
         apiHeaders: await const GoogleApiHeaders().getHeaders());
 
     PlacesDetailsResponse detail = await places.getDetailsByPlaceId(p.placeId!);
@@ -313,7 +277,6 @@ class _CrimeReportScreenState extends State<CrimeReportScreen> {
                   );
                 },
               );
-              //String formattedDate = DateFormat('HH:mm:ss').format(pickedDate!);
               timeCtl.text = formatTimeOfDay(pickedTime!);
             },
             validator: (val) {
@@ -471,7 +434,6 @@ class _CrimeReportScreenState extends State<CrimeReportScreen> {
                   'time': formatTimeOfDay(pickedTime!),
                   'type': type,
                   'descr': description,
-                  'persona': reporterType,
                 });
 
                 //add media files list if have any in the report

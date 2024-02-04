@@ -1,3 +1,5 @@
+import 'package:crimereporting_and_preventionsystem/login_register/screens/login_screen.dart';
+import 'package:crimereporting_and_preventionsystem/service/firebase.dart';
 import 'package:crimereporting_and_preventionsystem/utils/bottom_navbar.dart';
 import 'package:crimereporting_and_preventionsystem/utils/custom_widget.dart';
 import 'package:flutter/material.dart';
@@ -10,10 +12,23 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  final AuthService _authService = AuthService();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: customAppBar(title: 'Home Page'),
+      appBar: customAppBarAction(
+        title: 'Home Page',
+        actions: IconButton(
+          icon: const Icon(Icons.logout),
+          onPressed: () async {
+            await _authService.signOut();
+            Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(builder: (context) => const LoginScreen()),
+              (route) => false,
+            );
+          },
+        ),
+      ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [

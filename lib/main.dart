@@ -6,6 +6,7 @@ import 'package:crimereporting_and_preventionsystem/home.dart';
 import 'package:crimereporting_and_preventionsystem/login_register/screens/forget_password.dart';
 import 'package:crimereporting_and_preventionsystem/login_register/screens/login_screen.dart';
 import 'package:crimereporting_and_preventionsystem/login_register/screens/register_screen.dart';
+import 'package:crimereporting_and_preventionsystem/service/firebase.dart';
 import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -29,15 +30,6 @@ void main() async {
   runApp(const MyApp());
 }
 
-_init() async {
-  // var log = logger();
-  // log.i('App init');
-  // var global = Global();
-  // await global.init();
-  // // to suppress the code check warning which requires return a string
-  // return Future.value(null);
-}
-
 class MyApp extends StatefulWidget {
   const MyApp({Key? key}) : super(key: key);
 
@@ -46,14 +38,11 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  asyncInit() async {
-    await _init();
-  }
+  final AuthService authService = AuthService();
 
   @override
   initState() {
     super.initState();
-    asyncInit();
   }
 
   @override
@@ -61,9 +50,19 @@ class _MyAppState extends State<MyApp> {
     return GetMaterialApp(
       title: 'Crime Reporting And Prevention System',
       debugShowCheckedModeBanner: false,
-      initialRoute: '/login',
+      home: StreamBuilder(
+        stream: authService.authStateChanges,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const CircularProgressIndicator(); // Loading indicator
+          } else if (snapshot.hasData) {
+            return const HomePage(); // User is logged in
+          } else {
+            return const LoginScreen(); // User is not logged in
+          }
+        },
+      ),
       routes: {
-        // '/':(context) => const SplashScreen(),
         '/home': (context) => const HomePage(),
         '/login': (context) => const LoginScreen(),
         '/register': (context) => const RegisterScreen(),
@@ -72,14 +71,6 @@ class _MyAppState extends State<MyApp> {
         '/crimeAlert': (context) => const CrimeAlertsScreen(),
         '/crimeReport': (context) => const CrimeReportScreen(),
         '/awareness': (context) => const Awareness()
-        // '/postFeed':(context) => const PostFeedScreen(),
-        // '/editProfile':(context) => const EditProfile(),
-        // '/manageContact':(context) => const ManageEmergencyContact(),
-        // '/postList':(context) => const PostFeedScreen(),
-        // '/editSOS':(context) => const EditSOSContent(),
-        // '/myPost':(context) => const MyPostScreen(),
-        // '/helpCenter':(context) => const HelpCenterScreen(),
-        // '/guide':(context) => const GuideWebview()
       },
     );
   }

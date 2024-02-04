@@ -197,26 +197,27 @@ class _CrimeAlertsScreenState extends State<CrimeAlertsScreen> {
 
   Future<void> _handlePressButton() async {
     Prediction? p = await PlacesAutocomplete.show(
-        context: context,
-        apiKey: kGoogleApiKey,
-        onError: onError,
-        mode: _mode,
-        language: 'en',
-        strictbounds: false,
-        types: [""],
-        logo: Container(
-          height: 1,
-        ),
-        decoration: InputDecoration(
-            hintText: 'Enter Area, City or State',
-            focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(20),
-                borderSide: const BorderSide(color: Colors.white))),
-        components: [
-          Component(Component.country, "pk"),
-          Component(Component.country, "usa"),
-          Component(Component.country, "my")
-        ]);
+      context: context,
+      apiKey: kGoogleApiKey,
+      onError: onError,
+      mode: _mode,
+      language: 'en',
+      //strictbounds: false,
+      types: [""],
+      logo: Container(
+        height: 1,
+      ),
+      decoration: InputDecoration(
+          hintText: 'Enter Area, City or State',
+          focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(20),
+              borderSide: const BorderSide(color: Colors.white))),
+      // components: [
+      //   Component(Component.country, "pk"),
+      //   Component(Component.country, "usa"),
+      //   Component(Component.country, "my")
+      // ]
+    );
 
     if (p != null) {
       displayPrediction(p, homeScaffoldKey.currentState);

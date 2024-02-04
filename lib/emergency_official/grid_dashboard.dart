@@ -46,7 +46,6 @@ class _GridDashboardState extends State<GridDashboard> {
   @override
   Widget build(BuildContext context) {
     List<Items> myList = [item1, item2, item3, item4];
-    var color = 0xff2471A3;
     return Scaffold(
       appBar: customAppBar(title: "Emergency Officials"),
       body: GridView.count(

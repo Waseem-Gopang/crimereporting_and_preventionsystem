@@ -460,7 +460,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
           ),
           onPressed: () async {
             if (_formKey.currentState!.validate()) {
-              bool isDuplicate = await checkUserExist(iNo);
+              bool isDuplicate = await AuthService().checkUserExist(iNo);
               if (!isDuplicate) {
                 registerUser();
               } else {
@@ -476,7 +476,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   registerUser() async {
     //create user account
-    uID = await createAccount(email, pass, iNo);
+    uID = await AuthService().createAccount(email, pass, iNo);
     //check if avatar uploaded
     imageUrl = image != null ? await uploadImage(file: image!) : "";
     //check if user account created

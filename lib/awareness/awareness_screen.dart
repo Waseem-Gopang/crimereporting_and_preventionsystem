@@ -2,6 +2,7 @@ import 'package:crimereporting_and_preventionsystem/utils/bottom_navbar.dart';
 import 'package:crimereporting_and_preventionsystem/utils/custom_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
+import 'package:google_fonts/google_fonts.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 
 class Awareness extends StatefulWidget {
@@ -15,7 +16,7 @@ class _AwarenessState extends State<Awareness> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: customAppBar(title: "Awareness Laws"),
+      appBar: customAppBar(title: "Legal Awareness"),
       body: buildGridView(),
       bottomNavigationBar:
           const CustomBottomNavigationBar(defaultSelectedIndex: 3),
@@ -52,7 +53,8 @@ class _AwarenessState extends State<Awareness> {
         },
         child: Container(
           decoration: BoxDecoration(
-            border: Border.all(),
+            color: Colors.lightGreenAccent.shade700.withOpacity(.6),
+            borderRadius: BorderRadius.circular(10),
           ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -64,8 +66,12 @@ class _AwarenessState extends State<Awareness> {
               ),
               Text(
                 pdfData[index]["name"]!,
-                style: const TextStyle(fontSize: 18),
-              ),
+                style: GoogleFonts.openSans(
+                    textStyle: const TextStyle(
+                        color: Colors.red,
+                        fontSize: 15,
+                        fontWeight: FontWeight.w600)),
+              )
             ],
           ),
         ),
@@ -132,23 +138,34 @@ class _PdfScreenState extends State<PdfScreen> {
 List<Map<String, String>> pdfData = [
   {"name": "Pakistan Penal Code", "image": "assets/LegalDocuments/ppc.jpg"},
   {
-    "name": "Anti-Terrorism-Act-1997",
+    "name": "Anti Terrorism Act",
     "image": "assets/LegalDocuments/Anti-Terrorism Act.png"
   },
   {
-    "name": "Prevention of Electronic crimes Act",
+    "name": "Electronic Crimes Act",
     "image": "assets/LegalDocuments/Prevention of Electronic crimes Act.jpg"
   },
   {
-    "name": "Prevention of Trafficking in persons Act",
+    "name": "Human Trafficking Act",
     "image": "assets/LegalDocuments/trafficking.png"
   },
   {
-    "name": "Police Laws and Criminal Procedure",
+    "name": "Police Laws",
     "image": "assets/LegalDocuments/police laws and criminal procedure.jpg"
   },
   {
-    "name": "Code of criminal procedure 1898",
+    "name": "Criminal Procedure",
     "image": "assets/LegalDocuments/Code of criminal procedure.jpg"
-  }
+  },
+  {"name": "Arms Act", "image": "assets/LegalDocuments/Arms Act.jfif"},
+  {
+    "name": "Corruption Act",
+    "image": "assets/LegalDocuments/Corruption Act.jpg"
+  },
+  {"name": "Customs Act", "image": "assets/LegalDocuments/Customs Act.jfif"},
+  {
+    "name": "Foreign Exchange Act",
+    "image": "assets/LegalDocuments/Foreign Exchange Act.jpg"
+  },
+  {"name": "Juvenile Act", "image": "assets/LegalDocuments/Juvenile Act.jpg"}
 ];
