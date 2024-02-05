@@ -25,7 +25,7 @@ Future<String> uploadImage({required File file}) async {
 Future<String> uploadFile({required PlatformFile file}) async {
   final File fileForFirebase = File(file.path!);
   var fileName = fileForFirebase.path.split('/').last;
-  final path = 'mediaFiles/$fileName';
+  final path = 'Evidences/$fileName';
   UploadTask? uploadTask;
 
   final ref = FirebaseStorage.instance.ref().child(path);

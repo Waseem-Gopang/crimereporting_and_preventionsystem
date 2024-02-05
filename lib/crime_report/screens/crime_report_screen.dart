@@ -3,12 +3,11 @@ import 'package:crimereporting_and_preventionsystem/service/api.dart';
 import 'package:crimereporting_and_preventionsystem/utils/bottom_navbar.dart';
 import 'package:crimereporting_and_preventionsystem/utils/custom_widget.dart';
 import 'package:flutter_google_places/flutter_google_places.dart';
+import 'package:get/get.dart';
 import 'package:google_api_headers/google_api_headers.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
-
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 
 import '../../utils/theme.dart';
@@ -24,13 +23,17 @@ class CrimeReportScreen extends StatefulWidget {
   State<CrimeReportScreen> createState() => _CrimeReportScreenState();
 }
 
-const ApiKey = 'AIzaSyCgHCbmvovZvbTqg-DUBRWUm8HVJfVfXsY';
+const key = 'AIzaSyCgHCbmvovZvbTqg-DUBRWUm8HVJfVfXsY';
+bool isChecked = false;
 
 class _CrimeReportScreenState extends State<CrimeReportScreen> {
   final _formKey = GlobalKey<FormState>();
 
   bool haveFile = false;
-  bool havePerson = false;
+
+  String iNo = "";
+  String email = "";
+  String mobileNo = "";
 
   String evidenceList = "";
   String addDetails = "";
@@ -51,8 +54,6 @@ class _CrimeReportScreenState extends State<CrimeReportScreen> {
 
   TimeOfDay? pickedTime;
   TextEditingController timeCtl = TextEditingController();
-
-  String? reporterType;
 
   List selectedFiles = [];
 
@@ -85,6 +86,70 @@ class _CrimeReportScreenState extends State<CrimeReportScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   getLocationField(),
+                  getTextField(
+                      hint: 'Enter your CNIC No.',
+                      suffixIcon: const Icon(
+                        Icons.badge_outlined,
+                        color: Colors.red,
+                      ),
+                      valError: 'Please enter your Cnic no.',
+                      validator: (val) {
+                        if (val!.isEmpty) {
+                          return "Please enter your CNIC No.";
+                        } else if ((val.isNotEmpty) &&
+                            !RegExp(r'^\d{5}-\d{7}-\d{1}$').hasMatch(val)) {
+                          return "Enter a valid Cnic No. with dashes";
+                        }
+                        return null;
+                      },
+                      onChanged: (value) {
+                        setState(() {
+                          iNo = value;
+                        });
+                      }),
+                  getTextField(
+                      hint: 'Enter your email',
+                      suffixIcon: const Icon(
+                        Icons.email_outlined,
+                        color: Colors.red,
+                      ),
+                      valError: 'Please enter your Email',
+                      validator: (val) {
+                        if (val!.isEmpty) {
+                          return 'Please enter your email';
+                        } else if ((val.isNotEmpty) &&
+                            !RegExp(r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?)*$")
+                                .hasMatch(val)) {
+                          return "Enter a valid email";
+                        }
+                        return null;
+                      },
+                      onChanged: (value) {
+                        setState(() {
+                          email = value;
+                        });
+                      }),
+                  getTextField(
+                    hint: 'Enter your Mobile number',
+                    suffixIcon: const Icon(
+                      Icons.phone,
+                      color: Colors.red,
+                    ),
+                    validator: (val) {
+                      if (val!.isEmpty) {
+                        return "Please enter your mobile number";
+                      } else if ((val.isNotEmpty) &&
+                          !RegExp(r'^\92[3456789]\d{9}$').hasMatch(val)) {
+                        return "Enter a valid mobile number like 923001283753";
+                      }
+                      return null;
+                    },
+                    onChanged: (value) {
+                      setState(() {
+                        mobileNo = value;
+                      });
+                    },
+                  ),
                   getDateTimeFields(),
                   selectCrimeTypeField(),
                   getCrimeDescField(),
@@ -126,9 +191,9 @@ class _CrimeReportScreenState extends State<CrimeReportScreen> {
           ),
           child: Row(
             children: [
-              Icon(
+              const Icon(
                 Icons.location_on_outlined,
-                color: Colors.red.shade900,
+                color: Colors.red,
               ),
               const SizedBox(
                 width: 10,
@@ -155,7 +220,7 @@ class _CrimeReportScreenState extends State<CrimeReportScreen> {
   Future<void> _handlePressButton() async {
     Prediction? p = await PlacesAutocomplete.show(
         context: context,
-        apiKey: ApiKey,
+        apiKey: key,
         language: 'en',
         mode: _mode,
         strictbounds: false,
@@ -185,8 +250,7 @@ class _CrimeReportScreenState extends State<CrimeReportScreen> {
 
   Future<void> displayPrediction(Prediction p) async {
     GoogleMapsPlaces places = GoogleMapsPlaces(
-        apiKey: ApiKey,
-        apiHeaders: await const GoogleApiHeaders().getHeaders());
+        apiKey: key, apiHeaders: await const GoogleApiHeaders().getHeaders());
 
     PlacesDetailsResponse detail = await places.getDetailsByPlaceId(p.placeId!);
 
@@ -206,7 +270,7 @@ class _CrimeReportScreenState extends State<CrimeReportScreen> {
             controller: dateCtl,
             readOnly: true,
             decoration: ThemeHelper().textInputDecoReport('Select Date',
-                Icon(Icons.calendar_today, color: Colors.red.shade900)),
+                const Icon(Icons.calendar_today, color: Colors.red)),
             onTap: () async {
               pickedDate = await showDatePicker(
                 context: context,
@@ -251,9 +315,9 @@ class _CrimeReportScreenState extends State<CrimeReportScreen> {
             readOnly: true,
             decoration: ThemeHelper().textInputDecoReport(
                 'Select Time',
-                Icon(
+                const Icon(
                   Icons.watch_later_outlined,
-                  color: Colors.red.shade900,
+                  color: Colors.red,
                 )),
             onTap: () async {
               pickedTime = await showTimePicker(
@@ -288,6 +352,36 @@ class _CrimeReportScreenState extends State<CrimeReportScreen> {
           ),
         ),
       ],
+    );
+  }
+
+  String formatTimeOfDay(TimeOfDay tod) {
+    final now = DateTime.now();
+    final dt = DateTime(now.year, now.month, now.day, tod.hour, tod.minute);
+    final format = DateFormat.jm(); //"6:00 AM"
+    return format.format(dt);
+  }
+
+  getTextField(
+      {String? hint,
+      String? valError,
+      Function(String)? onChanged,
+      Icon? suffixIcon,
+      String? Function(String?)? validator}) {
+    return Container(
+      padding: const EdgeInsets.only(bottom: 20),
+      decoration: ThemeHelper().inputBoxDecorationShaddow(),
+      child: TextFormField(
+        decoration: ThemeHelper().textInputDecoReport(hint!, suffixIcon),
+        onChanged: onChanged,
+        validator: validator ??
+            (val) {
+              if (val!.isEmpty) {
+                return valError;
+              }
+              return null;
+            },
+      ),
     );
   }
 
@@ -398,73 +492,6 @@ class _CrimeReportScreenState extends State<CrimeReportScreen> {
     );
   }
 
-  getSubmitCancelButtonBar() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        getCustomButton(
-            text: "Cancel",
-            padding: 45,
-            background: Colors.black,
-            fontSize: 16,
-            onPressed: () {
-              Navigator.pushNamed(context, '/crimeReport');
-            }),
-        getCustomButton(
-            text: "Submit",
-            padding: 45,
-            background: Colors.red.shade900,
-            fontSize: 16,
-            onPressed: () async {
-              if (_formKey.currentState!.validate()) {
-                // String uID = Global.instance.user!.uId!;
-
-                DatabaseReference reportRef =
-                    FirebaseDatabase.instance.ref().child('reports');
-
-                String reportID = reportRef.push().key!;
-
-                //upload new report data to database
-                reportRef.child(reportID).set({
-                  'location': location,
-                  'longitude': lng!.toStringAsFixed(6),
-                  //'userID': uID,
-                  'latitude': lat!.toStringAsFixed(6),
-                  'date': formattedDate,
-                  'time': formatTimeOfDay(pickedTime!),
-                  'type': type,
-                  'descr': description,
-                });
-
-                //add media files list if have any in the report
-                if (selectedFiles.isNotEmpty) {
-                  evidenceList =
-                      "The following are links to evidence media attached:";
-                  DatabaseReference mediaRef =
-                      reportRef.child(reportID).child('media');
-                  var url;
-                  int index = 1;
-                  selectedFiles.forEach((file) async {
-                    url = await uploadFile(file: file!);
-                    mediaRef.child(index.toString()).set({'file': url});
-                    evidenceList += "\n$index File link: $url";
-                    index++;
-                  });
-                }
-
-                //send email to official services and auto-reply to user
-                sendEmail(reportID).whenComplete(() {
-                  Fluttertoast.showToast(
-                      msg:
-                          "Report Submitted and Emailed to Respected Officials Successfully");
-                  Navigator.pushReplacementNamed(context, '/crimeReport');
-                });
-              }
-            })
-      ],
-    );
-  }
-
   Future sendEmail(String id) async {
     //final user = Global.instance.user!;
     const serviceId = 'service_xsnm6c1';
@@ -491,7 +518,6 @@ class _CrimeReportScreenState extends State<CrimeReportScreen> {
           //     '${user.state}, ${user.country}',
           'date': DateFormat('yyyy-MM-dd').format(DateTime.now()),
           'crime': type,
-          'persona': reporterType,
           'in_date': formattedDate,
           'in_time': formatTimeOfDay(pickedTime!),
           'in_location': location,
@@ -504,10 +530,186 @@ class _CrimeReportScreenState extends State<CrimeReportScreen> {
     print(response.body);
   }
 
-  String formatTimeOfDay(TimeOfDay tod) {
-    final now = DateTime.now();
-    final dt = DateTime(now.year, now.month, now.day, tod.hour, tod.minute);
-    final format = DateFormat.jm(); //"6:00 AM"
-    return format.format(dt);
+  getSubmitCancelButtonBar() {
+    return Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+      getCustomButton(
+          text: "Cancel",
+          padding: 45,
+          background: Colors.black,
+          fontSize: 16,
+          onPressed: () {
+            Navigator.pushReplacementNamed(context, '/crimeReport');
+          }),
+      getCustomButton(
+          text: "Submit",
+          padding: 45,
+          background: Colors.red.shade900,
+          fontSize: 16,
+          onPressed: () async {
+            showDialog(
+                context: context,
+                builder: ((context) {
+                  return StatefulBuilder(builder: (context, setState) {
+                    return AlertDialog(
+                        title: const Center(child: Text("Terms & Conditions")),
+                        insetPadding:
+                            const EdgeInsets.symmetric(horizontal: 20),
+                        titleTextStyle: const TextStyle(
+                            color: Colors.red,
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold),
+                        shape: const RoundedRectangleBorder(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(15.0))),
+                        scrollable: true,
+                        content: const Wrap(
+                          runAlignment: WrapAlignment.center,
+                          runSpacing: 10,
+                          children: [
+                            Text(
+                              "User Agreement",
+                              style: TextStyle(
+                                  fontSize: 20, fontWeight: FontWeight.bold),
+                            ),
+                            Text(
+                              "Thank you for using our Crime Reporting And Prevention App! By submitting this report, you agree to the following terms:",
+                              style:
+                                  TextStyle(fontSize: 15, fontFamily: 'Roboto'),
+                            ),
+                            Text(
+                              "1. Provide accurate information.",
+                              style:
+                                  TextStyle(fontSize: 15, fontFamily: 'Roboto'),
+                            ),
+                            Text(
+                              "2. Report only genuine incidents.",
+                              style:
+                                  TextStyle(fontSize: 15, fontFamily: 'Roboto'),
+                            ),
+                            Text(
+                              "3. Do not submit false or misleading reports.",
+                              style:
+                                  TextStyle(fontSize: 15, fontFamily: 'Roboto'),
+                            ),
+                            Text(
+                              "Misuse of this reporting feature may result in legal actions and account penalties under Pakistani jurisdiction.",
+                              strutStyle: StrutStyle(
+                                fontFamily: 'Roboto',
+                                height: 1.5,
+                              ),
+                              style: TextStyle(fontFamily: 'Roboto'),
+                            ),
+                          ],
+                        ),
+                        actions: [
+                          Wrap(runSpacing: 2, children: [
+                            Row(
+                              children: [
+                                Checkbox(
+                                    activeColor: Colors.green,
+                                    checkColor: Colors.white,
+                                    value: isChecked,
+                                    onChanged: ((bool? value) {
+                                      setState(() {
+                                        isChecked = value!;
+                                      });
+                                    })),
+                                const Text(
+                                  'I agree with the Terms and Conditions',
+                                  style: TextStyle(
+                                      fontFamily: 'Roboto',
+                                      fontWeight: FontWeight.bold),
+                                )
+                              ],
+                            ),
+                            Center(
+                                child: ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: Colors.green,
+                                    ),
+                                    onPressed: (() {
+                                      if (isChecked == false) {
+                                        Get.snackbar("Error",
+                                            "Please agree to the terms and conditions",
+                                            snackPosition: SnackPosition.BOTTOM,
+                                            backgroundColor: Colors.red,
+                                            colorText: Colors.white,
+                                            duration:
+                                                const Duration(seconds: 3));
+                                      } else {
+                                        Navigator.of(context).pop(AlertDialog);
+                                        if (_formKey.currentState!.validate()) {
+                                          // String uID = Global.instance.user!.uId!;
+
+                                          DatabaseReference reportRef =
+                                              FirebaseDatabase.instance
+                                                  .ref()
+                                                  .child('reports');
+
+                                          String reportID =
+                                              reportRef.push().key!;
+
+                                          //upload new report data to database
+                                          reportRef.child(reportID).set({
+                                            //'location': location,
+                                            // 'longitude': lng!.toStringAsFixed(6),
+                                            //'userID': uID,
+                                            //'latitude': lat!.toStringAsFixed(6),
+                                            'Cnic No': iNo,
+                                            'email': email,
+                                            'mobile No': mobileNo,
+                                            'date': formattedDate,
+                                            'time':
+                                                formatTimeOfDay(pickedTime!),
+                                            'type': type,
+                                            'descr': description,
+                                          });
+
+                                          //add media files list if have any in the report
+                                          if (selectedFiles.isNotEmpty) {
+                                            evidenceList =
+                                                "The following are links to evidence media attached:";
+                                            DatabaseReference mediaRef =
+                                                reportRef
+                                                    .child(reportID)
+                                                    .child('evidences');
+                                            var url;
+                                            int index = 1;
+                                            selectedFiles.forEach((file) async {
+                                              url =
+                                                  await uploadFile(file: file!);
+                                              mediaRef
+                                                  .child(index.toString())
+                                                  .set({'file': url});
+                                              evidenceList +=
+                                                  "\n$index File link: $url";
+                                              index++;
+                                            });
+                                          }
+
+                                          //send email to official services and auto-reply to user
+                                          sendEmail(reportID).whenComplete(() {
+                                            Get.snackbar("Congratulation!",
+                                                "Report Submitted and Emailed to Respected Officials Successfully",
+                                                duration:
+                                                    const Duration(seconds: 5),
+                                                backgroundColor: Colors.green,
+                                                colorText: Colors.white);
+                                            Navigator.pushReplacementNamed(
+                                                context, '/crimeReport');
+                                          });
+                                        }
+                                      }
+                                    }),
+                                    child: const Text(
+                                      "Continue",
+                                      style: TextStyle(color: Colors.white),
+                                    )))
+                          ])
+                        ]);
+                  });
+                }));
+          })
+    ]);
   }
 }
