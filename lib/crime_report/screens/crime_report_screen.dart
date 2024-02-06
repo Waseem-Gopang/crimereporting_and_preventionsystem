@@ -87,7 +87,7 @@ class _CrimeReportScreenState extends State<CrimeReportScreen> {
                 children: [
                   getLocationField(),
                   getTextField(
-                      hint: 'Enter your CNIC No.',
+                      hint: 'Enter your Cnic no.',
                       suffixIcon: const Icon(
                         Icons.badge_outlined,
                         color: Colors.red,
@@ -108,7 +108,7 @@ class _CrimeReportScreenState extends State<CrimeReportScreen> {
                         });
                       }),
                   getTextField(
-                      hint: 'Enter your email',
+                      hint: 'Enter your Email',
                       suffixIcon: const Icon(
                         Icons.email_outlined,
                         color: Colors.red,
@@ -241,10 +241,10 @@ class _CrimeReportScreenState extends State<CrimeReportScreen> {
     if (p != null) {
       displayPrediction(p);
       setState(() {
-        location = "${p.terms[0].value} ${p.terms[1].value}";
+        location = p.terms.map((term) => term.value).join(" ");
       });
     } else {
-      print("p is giving null value");
+      print('User canceled location selection');
     }
   }
 
@@ -652,7 +652,8 @@ class _CrimeReportScreenState extends State<CrimeReportScreen> {
                                           //upload new report data to database
                                           reportRef.child(reportID).set({
                                             //'location': location,
-                                            // 'longitude': lng!.toStringAsFixed(6),
+                                            //'longitude':
+                                            //  lng!.toStringAsFixed(6),
                                             //'userID': uID,
                                             //'latitude': lat!.toStringAsFixed(6),
                                             'Cnic No': iNo,

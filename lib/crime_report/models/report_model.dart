@@ -6,10 +6,3 @@ class Report {
   String? description;
   String? location;
 }
-
-class addDetails {
-  //add victim details
-  //add witness and their details
-  //add assaulter details
-  //add comments/remark
-}

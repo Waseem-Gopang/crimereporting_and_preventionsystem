@@ -104,18 +104,14 @@ class _PdfScreenState extends State<PdfScreen> {
   }
 
   Future<void> fetchPdfUrl() async {
-    try {
-      String downloadURL = await firebase_storage.FirebaseStorage.instance
-          .ref()
-          .child('LegalDocuments/${widget.pdfName}.pdf')
-          .getDownloadURL();
+    String downloadURL = await firebase_storage.FirebaseStorage.instance
+        .ref()
+        .child('LegalDocuments/${widget.pdfName}.pdf')
+        .getDownloadURL();
 
-      setState(() {
-        pdfUrl = downloadURL;
-      });
-    } catch (e) {
-      print("Error fetching PDF URL: $e");
-    }
+    setState(() {
+      pdfUrl = downloadURL;
+    });
   }
 
   @override
