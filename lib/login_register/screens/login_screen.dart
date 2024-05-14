@@ -240,7 +240,6 @@ class _LoginScreenState extends State<LoginScreen> {
   redirectToRegister() {
     return Container(
       margin: const EdgeInsets.fromLTRB(10, 20, 10, 20),
-      //child: Text('Don\'t have an account? Create'),
       child: Text.rich(TextSpan(children: [
         const TextSpan(text: "Don't have an account? "),
         TextSpan(
@@ -283,10 +282,10 @@ class _LoginScreenState extends State<LoginScreen> {
                 duration: const Duration(seconds: 5),
                 backgroundColor: Colors.green,
                 colorText: Colors.white);
-            Get.toNamed("/home");
+            // Get.toNamed("/home");
 
-            // Navigator.of(context).pushNamedAndRemoveUntil(
-            //     '/home', (Route<dynamic> route) => false);
+            Navigator.of(context).pushNamedAndRemoveUntil(
+                '/home', (Route<dynamic> route) => false);
           }
         },
       ),

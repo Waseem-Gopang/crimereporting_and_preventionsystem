@@ -2,16 +2,14 @@ import 'dart:convert';
 import 'package:crimereporting_and_preventionsystem/service/api.dart';
 import 'package:crimereporting_and_preventionsystem/utils/bottom_navbar.dart';
 import 'package:crimereporting_and_preventionsystem/utils/custom_widget.dart';
-import 'package:flutter_google_places/flutter_google_places.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
-import 'package:google_api_headers/google_api_headers.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import '../../utils/theme.dart';
-import 'package:google_maps_webservice/places.dart';
 
 import '../models/crime_list.dart';
 import 'package:http/http.dart' as http;
@@ -41,7 +39,6 @@ class _CrimeReportScreenState extends State<CrimeReportScreen> {
   String? formattedDate;
 
   String? type;
-  final Mode _mode = Mode.overlay;
 
   String? location;
   double? lng;
@@ -60,7 +57,16 @@ class _CrimeReportScreenState extends State<CrimeReportScreen> {
   void selectFiles() async {
     final result = await FilePicker.platform.pickFiles(
         type: FileType.custom,
-        allowedExtensions: ['jpg', 'png', 'mp4', 'jpeg'],
+        allowedExtensions: [
+          'jpg',
+          'png',
+          'mp4',
+          'jpeg',
+          'mkv',
+          'avi',
+          'webm',
+          'mpeg-4'
+        ],
         allowMultiple: true);
     if (result == null) return;
 
@@ -176,86 +182,219 @@ class _CrimeReportScreenState extends State<CrimeReportScreen> {
     );
   }
 
+  // getLocationField() {
+  //   return Container(
+  //     padding: const EdgeInsets.only(bottom: 10),
+  //     child: OutlinedButton(
+  //         onPressed: _handlePressButton,
+  //         style: ButtonStyle(
+  //           shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+  //               RoundedRectangleBorder(
+  //                   borderRadius: BorderRadius.circular(10.0),
+  //                   side: BorderSide(color: Colors.grey.shade900))),
+  //           backgroundColor: MaterialStateProperty.all(Colors.white),
+  //           padding: MaterialStateProperty.all(const EdgeInsets.all(15)),
+  //         ),
+  //         child: Row(
+  //           children: [
+  //             const Icon(
+  //               Icons.location_on_outlined,
+  //               color: Colors.red,
+  //             ),
+  //             const SizedBox(
+  //               width: 10,
+  //             ),
+  //             SizedBox(
+  //               width: 250,
+  //               height: 18,
+  //               child: ListView(
+  //                 scrollDirection: Axis.horizontal,
+  //                 children: [
+  //                   Text(
+  //                     location ?? "Enter the Location of the Incident",
+  //                     style:
+  //                         TextStyle(color: Colors.grey.shade600, fontSize: 16),
+  //                   ),
+  //                 ],
+  //               ),
+  //             )
+  //           ],
+  //         )),
+  //   );
+  // }
   getLocationField() {
     return Container(
       padding: const EdgeInsets.only(bottom: 10),
       child: OutlinedButton(
-          onPressed: _handlePressButton,
-          style: ButtonStyle(
-            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10.0),
-                    side: BorderSide(color: Colors.grey.shade900))),
-            backgroundColor: MaterialStateProperty.all(Colors.white),
-            padding: MaterialStateProperty.all(const EdgeInsets.all(15)),
+        onPressed: _handlePressButton,
+        style: ButtonStyle(
+          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+            RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10.0),
+              side: BorderSide(color: Colors.grey.shade900),
+            ),
           ),
-          child: Row(
-            children: [
-              const Icon(
-                Icons.location_on_outlined,
-                color: Colors.red,
+          backgroundColor: MaterialStateProperty.all(Colors.white),
+          padding: MaterialStateProperty.all(const EdgeInsets.all(15)),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            SizedBox(
+              width: 250,
+              height: 18,
+              child: ListView(
+                scrollDirection: Axis.horizontal,
+                children: [
+                  Text(
+                    location ?? "Enter the Location of the Incident",
+                    style: TextStyle(color: Colors.grey.shade600, fontSize: 16),
+                  ),
+                ],
               ),
-              const SizedBox(
-                width: 10,
-              ),
-              SizedBox(
-                width: 250,
-                height: 18,
-                child: ListView(
-                  scrollDirection: Axis.horizontal,
-                  children: [
-                    Text(
-                      location ?? "Enter the Location of the Incident",
-                      style:
-                          TextStyle(color: Colors.grey.shade600, fontSize: 16),
-                    ),
-                  ],
-                ),
-              )
-            ],
-          )),
+            ),
+            const Icon(
+              Icons.location_on_outlined,
+              color: Colors.red,
+            ),
+          ],
+        ),
+      ),
     );
   }
+//first coded that was already present
+  // Future<void> _handlePressButton() async {
+  //   Prediction? p = await PlacesAutocomplete.show(
+  //       context: context,
+  //       apiKey: key,
+  //       language: 'en',
+  //       mode: Mode.overlay,
+  //       strictbounds: false,
+  //       types: [""],
+  //       radius: 1000000,
+  //       logo: Container(
+  //         height: 1,
+  //       ),
+  //       decoration: InputDecoration(
+  //           hintText: 'Enter the Location of the Incident',
+  //           focusedBorder: OutlineInputBorder(
+  //               borderRadius: BorderRadius.circular(20),
+  //               borderSide: const BorderSide(color: Colors.white))),
+  //       components: [
+  //         Component(Component.country, "pk"),
+  //         Component(Component.country, "usa"),
+  //         Component(Component.country, "my")
+  //       ]);
+  //   if (p != null) {
+  //     displayPrediction(p, homeScaffoldKey.currentState);
+  //   }
+  // }
+
+  // Future<void> displayPrediction(
+  //     Prediction p, ScaffoldState? currentState) async {
+  //   GoogleMapsPlaces places = GoogleMapsPlaces(
+  //       apiKey: key, apiHeaders: await const GoogleApiHeaders().getHeaders());
+
+  //   PlacesDetailsResponse detail = await places.getDetailsByPlaceId(p.placeId!);
+
+  //   setState(() {
+  //     lat = detail.result.geometry!.location.lat;
+  //     lng = detail.result.geometry!.location.lng;
+  //     location = detail.result.formattedAddress;
+  //   });
+  // }
+
+//improved code of chatgpt
+  // Future<void> _handlePressButton() async {
+  //   try {
+  //     // Get the current location
+  //     Position position = await Geolocator.getCurrentPosition(
+  //         desiredAccuracy: LocationAccuracy.high);
+
+  //     // Convert the coordinates to a human-readable address
+  //     String address = await _getAddressFromCoordinates(
+  //         position.latitude, position.longitude);
+
+  //     setState(() {
+  //       location = address;
+  //       lat = position.latitude;
+  //       lng = position.longitude;
+  //     });
+  //   } catch (error) {
+  //     print('Error getting current location: $error');
+  //   }
+  // }
+
+  // Future<String> _getAddressFromCoordinates(double lat, double lng) async {
+  //   const apiKey = key; // Replace 'YOUR_API_KEY' with your actual API key
+  //   final url =
+  //       'https://maps.googleapis.com/maps/api/geocode/json?latlng=$lat,$lng&key=$apiKey';
+
+  //   try {
+  //     final response = await http.get(Uri.parse(url));
+  //     if (response.statusCode == 200) {
+  //       final data = json.decode(response.body);
+  //       if (data['status'] == 'OK' &&
+  //           data['results'] != null &&
+  //           data['results'].isNotEmpty) {
+  //         return data['results'][0]['formatted_address'];
+  //       } else {
+  //         print('No address found. Response: ${data.toString()}');
+  //         return 'No address found';
+  //       }
+  //     } else {
+  //       print('Error response from Geocoding API: ${response.statusCode}');
+  //       return 'Error: ${response.statusCode}';
+  //     }
+  //   } catch (e) {
+  //     print('Error retrieving address: $e');
+  //     return 'Error: $e';
+  //   }
+  // }
 
   Future<void> _handlePressButton() async {
-    Prediction? p = await PlacesAutocomplete.show(
-        context: context,
-        apiKey: key,
-        language: 'en',
-        mode: _mode,
-        strictbounds: false,
-        types: [""],
-        logo: Container(
-          height: 1,
-        ),
-        decoration: InputDecoration(
-            hintText: 'Enter the Location of the Incident',
-            focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(20),
-                borderSide: const BorderSide(color: Colors.white))),
-        components: [
-          Component(Component.country, "pk"),
-          Component(Component.country, "usa"),
-          Component(Component.country, "my")
-        ]);
-    if (p != null) {
-      displayPrediction(p);
+    try {
+      // Get the current location
+      Position position = await Geolocator.getCurrentPosition(
+          desiredAccuracy: LocationAccuracy.high);
+
+      // Convert the coordinates to a human-readable address
+      String address = await _getAddressFromCoordinates(
+          position.latitude, position.longitude);
+
       setState(() {
-        location = p.terms.map((term) => term.value).join(" ");
+        location = address;
+        lat = position.latitude;
+        lng = position.longitude;
       });
-    } else {
-      print('User canceled location selection');
+    } catch (error) {
+      print('Error getting current location: $error');
     }
   }
 
-  Future<void> displayPrediction(Prediction p) async {
-    GoogleMapsPlaces places = GoogleMapsPlaces(
-        apiKey: key, apiHeaders: await const GoogleApiHeaders().getHeaders());
+  Future<String> _getAddressFromCoordinates(double lat, double lng) async {
+    final url =
+        'https://nominatim.openstreetmap.org/reverse?format=json&lat=$lat&lon=$lng&zoom=18&addressdetails=1';
 
-    PlacesDetailsResponse detail = await places.getDetailsByPlaceId(p.placeId!);
-
-    lat = detail.result.geometry!.location.lat;
-    lng = detail.result.geometry!.location.lng;
+    try {
+      final response =
+          await http.get(Uri.parse(url), headers: {'accept-language': 'en'});
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        if (data != null && data['display_name'] != null) {
+          return data['display_name'];
+        } else {
+          print('No address found. Response: ${data.toString()}');
+          return 'No address found';
+        }
+      } else {
+        print('Error response from Nominatim API: ${response.statusCode}');
+        return 'Error: ${response.statusCode}';
+      }
+    } catch (e) {
+      print('Error retrieving address: $e');
+      return 'Error: $e';
+    }
   }
 
   getDateTimeFields() {
@@ -651,11 +790,11 @@ class _CrimeReportScreenState extends State<CrimeReportScreen> {
 
                                           //upload new report data to database
                                           reportRef.child(reportID).set({
-                                            //'location': location,
-                                            //'longitude':
-                                            //  lng!.toStringAsFixed(6),
+                                            'location': location,
+                                            'longitude':
+                                                lng!.toStringAsFixed(6),
                                             //'userID': uID,
-                                            //'latitude': lat!.toStringAsFixed(6),
+                                            'latitude': lat!.toStringAsFixed(6),
                                             'Cnic No': iNo,
                                             'email': email,
                                             'mobile No': mobileNo,

@@ -1,6 +1,7 @@
 import 'package:crimereporting_and_preventionsystem/awareness/awareness_screen.dart';
 import 'package:crimereporting_and_preventionsystem/crime_location/screens/crime_location_screen.dart';
 import 'package:crimereporting_and_preventionsystem/crime_report/screens/crime_report_screen.dart';
+import 'package:crimereporting_and_preventionsystem/drawer/screens/manage_screen.dart';
 import 'package:crimereporting_and_preventionsystem/emergency_official/grid_dashboard.dart';
 import 'package:crimereporting_and_preventionsystem/home.dart';
 import 'package:crimereporting_and_preventionsystem/login_register/screens/forget_password.dart';
@@ -70,7 +71,9 @@ class _MyAppState extends State<MyApp> {
         '/emergency Official': (context) => const GridDashboard(),
         '/crimeAlert': (context) => const CrimeAlertsScreen(),
         '/crimeReport': (context) => const CrimeReportScreen(),
-        '/awareness': (context) => const Awareness()
+        '/awareness': (context) => const Awareness(),
+        '/manageContact': (context) => const ManageEmergencyContact(),
+        //'/addEmergencyContact': (context)=> const AddEmergencyContact(mapEdit:false , o,)
       },
     );
   }

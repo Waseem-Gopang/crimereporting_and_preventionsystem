@@ -53,7 +53,7 @@ class _AwarenessState extends State<Awareness> {
         },
         child: Container(
           decoration: BoxDecoration(
-            color: Colors.lightGreenAccent.shade700.withOpacity(.6),
+            color: Colors.red,
             borderRadius: BorderRadius.circular(10),
           ),
           child: Column(
@@ -68,7 +68,7 @@ class _AwarenessState extends State<Awareness> {
                 pdfData[index]["name"]!,
                 style: GoogleFonts.openSans(
                     textStyle: const TextStyle(
-                        color: Colors.red,
+                        color: Colors.white,
                         fontSize: 15,
                         fontWeight: FontWeight.w600)),
               )

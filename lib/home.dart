@@ -1,9 +1,11 @@
 import 'package:crimereporting_and_preventionsystem/login_register/screens/login_screen.dart';
 import 'package:crimereporting_and_preventionsystem/service/firebase.dart';
 import 'package:crimereporting_and_preventionsystem/utils/bottom_navbar.dart';
-import 'package:crimereporting_and_preventionsystem/utils/custom_drawer.dart';
 import 'package:crimereporting_and_preventionsystem/utils/custom_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:quickalert/quickalert.dart';
+
+import 'drawer/screens/custom_drawer.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -20,15 +22,25 @@ class _HomePageState extends State<HomePage> {
       appBar: customAppBarAction(
         title: 'Home Page',
         actions: IconButton(
-          icon: const Icon(Icons.logout),
-          onPressed: () async {
-            await _authService.signOut();
-            Navigator.of(context).pushAndRemoveUntil(
-              MaterialPageRoute(builder: (context) => const LoginScreen()),
-              (route) => false,
-            );
-          },
-        ),
+            icon: const Icon(Icons.logout),
+            onPressed: () async {
+              // Display the alert and wait for user's decision
+              QuickAlert.show(
+                  context: context,
+                  type: QuickAlertType.confirm,
+                  text: 'Do you want to logout',
+                  confirmBtnText: 'Yes',
+                  cancelBtnText: 'No',
+                  confirmBtnColor: Colors.green,
+                  onConfirmBtnTap: () async {
+                    await _authService.signOut();
+                    Navigator.of(context).pushAndRemoveUntil(
+                      MaterialPageRoute(
+                          builder: (context) => const LoginScreen()),
+                      (route) => false,
+                    );
+                  });
+            }),
       ),
       drawer: const CustomDrawer(),
       body: Column(

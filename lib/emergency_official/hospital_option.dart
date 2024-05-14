@@ -27,10 +27,19 @@ class HospitalOptions extends StatelessWidget {
                     Radius.circular(15.0),
                   ),
                 ),
-                tileColor: Colors.greenAccent,
-                leading: const Icon(Icons.map),
-                title: const Text('Hospital Map Display'),
-                subtitle: const Text('Find the nearest Hospital on the map'),
+                tileColor: Colors.red,
+                leading: const Icon(
+                  Icons.map,
+                  color: Colors.black,
+                ),
+                title: const Text(
+                  'Hospital Map Display',
+                  style: TextStyle(color: Colors.black),
+                ),
+                subtitle: const Text(
+                  'Find the nearest Hospital on the map',
+                  style: TextStyle(color: Colors.white),
+                ),
                 onTap: () async {
                   Position position = await Geolocator.getCurrentPosition(
                       desiredAccuracy: LocationAccuracy.high);
@@ -56,10 +65,19 @@ class HospitalOptions extends StatelessWidget {
                     Radius.circular(15.0),
                   ),
                 ),
-                tileColor: Colors.limeAccent,
-                leading: const Icon(Icons.call),
-                title: const Text('Call'),
-                subtitle: const Text('Directly call the hospital helpline'),
+                tileColor: Colors.red,
+                leading: const Icon(
+                  Icons.call,
+                  color: Colors.black,
+                ),
+                title: const Text(
+                  'Call',
+                  style: TextStyle(color: Colors.black),
+                ),
+                subtitle: const Text(
+                  'Directly call the hospital helpline',
+                  style: TextStyle(color: Colors.white),
+                ),
                 onTap: () async {
                   if (await Permission.phone.request().isGranted) {
                     debugPrint("In making phone call");
@@ -79,11 +97,19 @@ class HospitalOptions extends StatelessWidget {
                     Radius.circular(15.0),
                   ),
                 ),
-                tileColor: Colors.purpleAccent,
-                leading: const Icon(Icons.message),
-                title: const Text('Send Distress Message'),
-                subtitle:
-                    const Text('Send a distress message to emergency contacts'),
+                tileColor: Colors.red,
+                leading: const Icon(
+                  Icons.message,
+                  color: Colors.black,
+                ),
+                title: const Text(
+                  'Send Distress Message',
+                  style: TextStyle(color: Colors.black),
+                ),
+                subtitle: const Text(
+                  'Send a distress message to emergency contacts',
+                  style: TextStyle(color: Colors.white),
+                ),
                 onTap: () {
                   smsController.sendLocationViaSMS(
                       "Medical Emergency\nSend Ambulance at");
