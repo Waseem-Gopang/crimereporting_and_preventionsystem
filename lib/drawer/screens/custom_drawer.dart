@@ -1,5 +1,7 @@
 import 'package:crimereporting_and_preventionsystem/drawer/components/add_contact_popup.dart';
 import 'package:crimereporting_and_preventionsystem/drawer/components/send_email.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 
 class CustomDrawer extends StatefulWidget {
@@ -11,10 +13,41 @@ class CustomDrawer extends StatefulWidget {
 
 class _CustomDrawerState extends State<CustomDrawer> {
   bool isSwitched = false;
-  String? url;
+  String? imageURL =
+      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT98A0_6JOy9FNLcNjipGe4xSgzGiCTfgLybw&usqp=CAU';
+
+  late User currentUser;
+  late DatabaseReference userRef;
+
+  @override
+  void initState() {
+    super.initState();
+    currentUser = FirebaseAuth.instance.currentUser!;
+    userRef =
+        FirebaseDatabase.instance.ref().child('users').child(currentUser.uid);
+    fetchUserImage();
+  }
+
+  void fetchUserImage() async {
+    final snapshot = await userRef.get();
+    if (snapshot.exists) {
+      Map data = snapshot.value as Map;
+      setState(() {
+        imageURL = data['avatar'] ?? currentUser.photoURL ?? imageURL;
+        //haveImage = imageURL.isNotEmpty;
+      });
+    } else {
+      // If no data in database, use Google account information
+      setState(() {
+        imageURL = currentUser.photoURL ?? imageURL;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
+    User currentUser = FirebaseAuth.instance.currentUser!;
+    String displayName = getDisplayName(currentUser);
     return SizedBox(
       width: 300,
       child: Drawer(
@@ -35,6 +68,49 @@ class _CustomDrawerState extends State<CustomDrawer> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                Container(
+                  padding: const EdgeInsets.only(
+                      top: 20, right: 10, left: 10, bottom: 10),
+                  color: Colors.grey,
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      getAvatar(),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 2.0, left: 10),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              displayName,
+                              style: const TextStyle(
+                                  fontSize: 16, fontWeight: FontWeight.bold),
+                            ),
+                            TextButton(
+                                onPressed: () {
+                                  Navigator.pushNamed(context, '/editProfile');
+                                },
+                                child: Row(
+                                  children: [
+                                    Text(
+                                      "Edit Profile",
+                                      style: TextStyle(
+                                          fontSize: 18,
+                                          color: Colors.red.shade900),
+                                    ),
+                                    Icon(
+                                      Icons.chevron_right,
+                                      color: Colors.red.shade900,
+                                      size: 25,
+                                    )
+                                  ],
+                                ))
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
+                ),
                 getTextButton(
                   text: "Send Feedback",
                   onTap: () {
@@ -44,37 +120,10 @@ class _CustomDrawerState extends State<CustomDrawer> {
                 const SizedBox(height: 20),
                 getHeaderText("SOS Message"),
                 const SizedBox(height: 10),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    getTextButton(
-                      text: "Enable SOS Menu Bar",
-                      onTap: () {},
-                    ),
-                    Switch(
-                      onChanged: (value) {
-                        setState(() {
-                          isSwitched = value;
-                        });
-                      },
-                      value: isSwitched,
-                      activeColor: Colors.greenAccent.shade400,
-                      activeTrackColor: Colors.green.shade800,
-                      inactiveThumbColor: Colors.white,
-                      inactiveTrackColor: Colors.grey,
-                    ),
-                  ],
-                ),
                 getTextButton(
                   text: "Edit SOS Message Content",
                   onTap: () {
                     Navigator.of(context).pushNamed('/editSOS');
-                  },
-                ),
-                getTextButton(
-                  text: "Additional SOS Settings",
-                  onTap: () {
-                    getSosSettingFormPopUp();
                   },
                 ),
                 const SizedBox(height: 20),
@@ -98,6 +147,16 @@ class _CustomDrawerState extends State<CustomDrawer> {
         ),
       ),
     );
+  }
+
+  String getDisplayName(User user) {
+    if (user.displayName != null && user.displayName!.isNotEmpty) {
+      return user.displayName!;
+    } else if (user.email != null && user.email!.isNotEmpty) {
+      return user.email!
+          .split('@')[0]; // Use email prefix if displayName is null
+    }
+    return 'User';
   }
 
   Widget getHeaderText(String text) {
@@ -127,24 +186,43 @@ class _CustomDrawerState extends State<CustomDrawer> {
     );
   }
 
-  getSosSettingFormPopUp() {
-    return showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text("SOS Settings"),
-          content: const Text("This is where you can adjust SOS settings."),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text("Close"),
+  getAvatar() {
+    return imageURL != ""
+        ? Container(
+            height: 85.0,
+            width: 80,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              image: DecorationImage(
+                image: NetworkImage(imageURL!),
+                fit: BoxFit.cover,
+              ), // border color
+              borderRadius: const BorderRadius.all(Radius.circular(50.0)),
+              border: Border.all(
+                color: Colors.red.shade900,
+                width: 1.0,
+              ),
             ),
-          ],
-        );
-      },
-    );
+            child: Container())
+        : Container(
+            height: 85.0,
+            width: 80,
+            decoration: BoxDecoration(
+              color: Colors.white, // border color
+              borderRadius: const BorderRadius.all(Radius.circular(50.0)),
+              border: Border.all(
+                color: Colors.red.shade900,
+                width: 3.0,
+              ),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.only(right: 5.0),
+              child: Icon(
+                Icons.person,
+                color: Colors.red.shade900,
+                size: 78.0,
+              ),
+            ));
   }
 
   getSendFeedbackPopUp() {

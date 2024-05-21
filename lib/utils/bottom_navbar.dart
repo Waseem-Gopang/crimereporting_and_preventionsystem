@@ -1,10 +1,12 @@
+import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 
 class CustomBottomNavigationBar extends StatefulWidget {
   final int defaultSelectedIndex;
 
   const CustomBottomNavigationBar(
-      {super.key, required this.defaultSelectedIndex});
+      {Key? key, required this.defaultSelectedIndex})
+      : super(key: key);
 
   @override
   State<CustomBottomNavigationBar> createState() =>
@@ -12,99 +14,90 @@ class CustomBottomNavigationBar extends StatefulWidget {
 }
 
 class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
-  int _selectedIndex = 0;
-  List<IconData> iconList = [];
-  List<String> textList = [];
+  late int _selectedIndex;
+  final List<IconData> _iconList = [
+    Icons.map,
+    Icons.local_police_outlined,
+    Icons.home,
+    Icons.remove_red_eye_outlined,
+    Icons.contact_emergency_outlined,
+  ];
+  final List<String> _textList = [
+    'Crime Locations',
+    'Crime Report',
+    'Home',
+    'Awareness',
+    'Emergency Off.',
+  ];
 
   @override
-  initState() {
+  void initState() {
     super.initState();
-    iconList = [
-      Icons.map,
-      Icons.local_police_outlined,
-      Icons.home,
-      Icons.remove_red_eye_outlined,
-      Icons.contact_emergency_outlined,
-    ];
-    textList = [
-      'Crime Locations',
-      'Crime Report',
-      'Home',
-      'Awareness',
-      'Emergency Off.'
-    ];
     _selectedIndex = widget.defaultSelectedIndex;
   }
 
   @override
   Widget build(BuildContext context) {
-    List<Widget> navBarItemList = [];
-
-    for (var i = 0; i < iconList.length; i++) {
-      navBarItemList.add(buildNavBarItem(iconList[i], i, textList[i]));
-    }
-    return Padding(
-      padding: const EdgeInsets.only(top: 8.0),
-      child: Row(
-        children: navBarItemList,
-      ),
-    );
-  }
-
-  Widget buildNavBarItem(IconData icon, int index, String label) {
-    return GestureDetector(
-      onTap: () {
-        navigateBottom(index);
-      },
-      child: Container(
-        height: 50,
-        width: MediaQuery.of(context).size.width / iconList.length,
-        decoration: index == _selectedIndex
-            ? BoxDecoration(
-                border: Border(
-                  bottom: BorderSide(width: 4, color: Colors.red.shade900),
-                ),
-              )
-            : const BoxDecoration(),
-        child: Column(
+    return CurvedNavigationBar(
+      index: _selectedIndex,
+      height: 75.0,
+      items: List.generate(_iconList.length, (index) {
+        return Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(
-              icon,
+              _iconList[index],
+              size: 30,
               color:
-                  index == _selectedIndex ? Colors.red.shade900 : Colors.grey,
+                  _selectedIndex == index ? Colors.red.shade900 : Colors.grey,
             ),
-            Text(label,
-                style: TextStyle(
-                  fontSize: 10,
-                  color: index == _selectedIndex
-                      ? Colors.red.shade900
-                      : Colors.grey,
-                )),
+            Text(
+              _textList[index],
+              style: TextStyle(
+                fontSize: 10,
+                color:
+                    _selectedIndex == index ? Colors.red.shade900 : Colors.grey,
+              ),
+            ),
           ],
-        ),
-      ),
+        );
+      }),
+      color: Colors.red.shade100,
+      buttonBackgroundColor: Colors.yellow,
+      backgroundColor: Colors.white,
+      animationCurve: Curves.easeInOut,
+      animationDuration: const Duration(milliseconds: 600),
+      onTap: (index) {
+        setState(() {
+          _selectedIndex = index;
+        });
+        navigateBottom(index);
+      },
+      letIndexChange: (index) => true,
     );
   }
 
   void navigateBottom(int index) {
+    String route;
     switch (index) {
       case 0:
-        Navigator.pushReplacementNamed(context, "/crimeAlert");
+        route = "/crimeAlert";
         break;
       case 1:
-        Navigator.pushReplacementNamed(context, "/crimeReport");
+        route = "/crimeReport";
         break;
       case 2:
-        Navigator.pushReplacementNamed(context, "/home");
+        route = "/home";
         break;
       case 3:
-        Navigator.pushReplacementNamed(context, "/awareness");
+        route = "/awareness";
         break;
       case 4:
-        Navigator.pushReplacementNamed(context, "/emergency Official");
+        route = "/emergencyOfficial";
         break;
-      case 5:
-        break;
+      default:
+        return;
     }
+    Navigator.pushReplacementNamed(context, route);
   }
 }

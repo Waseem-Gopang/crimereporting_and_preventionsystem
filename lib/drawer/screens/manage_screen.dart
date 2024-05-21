@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:crimereporting_and_preventionsystem/utils/custom_widget.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -19,14 +20,12 @@ class _ManageEmergencyContactState extends State<ManageEmergencyContact> {
 
   bool haveContact = false;
 
-  //String uID = Global.instance.user!.uId!;
-
+  String uID = FirebaseAuth.instance.currentUser!.uid;
   var contactRef;
 
   getContactList() async {
     contactList = [];
-    contactRef =
-        FirebaseDatabase.instance.ref().child('contacts'); //.child(uID);
+    contactRef = FirebaseDatabase.instance.ref().child('contacts').child(uID);
     await contactRef.onValue.listen((event) async {
       for (final child in event.snapshot.children) {
         String id = await json.decode(json.encode(child.key));
@@ -118,9 +117,8 @@ class _ManageEmergencyContactState extends State<ManageEmergencyContact> {
           return AddEmergencyContact(
             mapEdit: contact,
             onEdit: (value) {
-              DatabaseReference contactRef = FirebaseDatabase.instance
-                  .ref()
-                  .child('contacts'); //.child(uID);
+              DatabaseReference contactRef =
+                  FirebaseDatabase.instance.ref().child('contacts').child(uID);
 
               contactRef.child(value.id!).update({
                 'fname': value.fname,

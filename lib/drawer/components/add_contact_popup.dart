@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -25,7 +26,7 @@ class _AddEmergencyContactState extends State<AddEmergencyContact> {
   String? relation = "";
   String? contactNo = "";
 
-  //String uID = Global.instance.user!.uId!;
+  String uID = FirebaseAuth.instance.currentUser!.uid;
 
   Contact? contact;
   List<String> type = [
@@ -133,9 +134,10 @@ class _AddEmergencyContactState extends State<AddEmergencyContact> {
                 ),
                 onPressed: () {
                   setState(() {
-                    DatabaseReference contactRef =
-                        FirebaseDatabase.instance.ref().child('contacts');
-                    //.child(uID);
+                    DatabaseReference contactRef = FirebaseDatabase.instance
+                        .ref()
+                        .child('contacts')
+                        .child(uID);
 
                     String contactID = contactRef.push().key!;
 

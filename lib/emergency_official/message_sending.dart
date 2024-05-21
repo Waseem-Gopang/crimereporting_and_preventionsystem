@@ -12,30 +12,33 @@ class MessageController extends GetxController {
 
   String? _currentAddress;
   Position? _currentPosition;
+
   Future<void> _sendSMS(String message, List<String> recipients) async {
-    for (var i = 0; i < recipients.length; i++) {
+    for (var recipient in recipients) {
       SmsStatus status = await BackgroundSms.sendMessage(
-        phoneNumber: recipients[i].toString(),
+        phoneNumber: recipient,
         message: message,
       );
 
       if (status == SmsStatus.sent) {
         Get.snackbar("SMS", "Distress SMS Sent Successfully");
+      } else {
+        Get.snackbar("SMS", "Failed to send SMS to $recipient");
       }
     }
-
-    print(recipients);
   }
 
   Future<bool> handleLocationPermission() async {
     bool serviceEnabled;
     LocationPermission permission;
+
     serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
       Get.snackbar("Disabled",
           'Location services are disabled. Please enable the services');
       return false;
     }
+
     permission = await Geolocator.checkPermission();
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
@@ -44,15 +47,17 @@ class MessageController extends GetxController {
         return false;
       }
     }
+
     if (permission == LocationPermission.deniedForever) {
       Get.snackbar("Rejected",
           'Location permissions are permanently denied, we cannot request permissions.');
       return false;
     }
+
     return true;
   }
 
-  handleSmsPermission() async {
+  Future<bool> handleSmsPermission() async {
     final status = await Permission.sms.request();
     if (status.isGranted) {
       debugPrint("SMS Permission Granted");
@@ -68,26 +73,6 @@ class MessageController extends GetxController {
 
     if (!hasPermission) {
       return Position(
-          latitude: 0,
-          longitude: 0,
-          timestamp: DateTime.now(),
-          accuracy: 0,
-          altitude: 0,
-          heading: 0,
-          speed: 0,
-          speedAccuracy: 0,
-          altitudeAccuracy: 0,
-          headingAccuracy: 0);
-    }
-    await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high)
-        .then((Position position) {
-      _currentPosition = position;
-      _getAddressFromLatLng(_currentPosition!);
-      return _currentPosition!;
-    }).catchError((e) {
-      debugPrint(e);
-    });
-    return Position(
         latitude: 0,
         longitude: 0,
         timestamp: DateTime.now(),
@@ -97,7 +82,28 @@ class MessageController extends GetxController {
         speed: 0,
         speedAccuracy: 0,
         altitudeAccuracy: 0,
-        headingAccuracy: 0);
+        headingAccuracy: 0,
+      );
+    }
+
+    try {
+      return await Geolocator.getCurrentPosition(
+          desiredAccuracy: LocationAccuracy.high);
+    } catch (e) {
+      debugPrint(e.toString());
+      return Position(
+        latitude: 0,
+        longitude: 0,
+        timestamp: DateTime.now(),
+        accuracy: 0,
+        altitude: 0,
+        heading: 0,
+        speed: 0,
+        speedAccuracy: 0,
+        altitudeAccuracy: 0,
+        headingAccuracy: 0,
+      );
+    }
   }
 
   Future<void> _getAddressFromLatLng(Position position) async {
@@ -115,14 +121,22 @@ class MessageController extends GetxController {
   }
 
   Future<void> sendLocationViaSMS(String emergencyType) async {
-    await getCurrentPosition().then((currentAddress) async {
+    await getCurrentPosition().then((currentPosition) async {
+      _currentPosition = currentPosition;
+      await _getAddressFromLatLng(_currentPosition!);
       if (_currentAddress != null) {
         String message =
-            "HELP me! There is an $emergencyType \n http://www.google.com/maps/place/${_currentPosition!.latitude},${_currentPosition!.longitude}}";
-        await emergencyContactsController
-            .loadData()
-            .then((emergencyContacts) => _sendSMS(message, emergencyContacts));
-      } else {}
+            "HELP me! There is a $emergencyType \n http://www.google.com/maps/place/${_currentPosition!.latitude},${_currentPosition!.longitude}";
+        List<String> emergencyContacts = await emergencyContactsController
+            .loadEmergencyContactsFromFirebase();
+        if (emergencyContacts.isNotEmpty) {
+          await _sendSMS(message, emergencyContacts);
+        } else {
+          Get.snackbar("Error", "No emergency contacts found.");
+        }
+      } else {
+        Get.snackbar("Error", "Unable to retrieve address.");
+      }
     });
   }
 }

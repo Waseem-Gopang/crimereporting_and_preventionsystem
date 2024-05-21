@@ -1,6 +1,8 @@
 import 'package:crimereporting_and_preventionsystem/awareness/awareness_screen.dart';
 import 'package:crimereporting_and_preventionsystem/crime_location/screens/crime_location_screen.dart';
 import 'package:crimereporting_and_preventionsystem/crime_report/screens/crime_report_screen.dart';
+import 'package:crimereporting_and_preventionsystem/drawer/screens/edit_profile_screen.dart';
+import 'package:crimereporting_and_preventionsystem/drawer/screens/edit_sos_content_screen.dart';
 import 'package:crimereporting_and_preventionsystem/drawer/screens/manage_screen.dart';
 import 'package:crimereporting_and_preventionsystem/emergency_official/grid_dashboard.dart';
 import 'package:crimereporting_and_preventionsystem/home.dart';
@@ -11,6 +13,7 @@ import 'package:crimereporting_and_preventionsystem/service/firebase.dart';
 import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'firebase_options.dart';
 
@@ -73,6 +76,8 @@ class _MyAppState extends State<MyApp> {
         '/crimeReport': (context) => const CrimeReportScreen(),
         '/awareness': (context) => const Awareness(),
         '/manageContact': (context) => const ManageEmergencyContact(),
+        '/editSOS': (context) => const EditSOSContent(),
+        '/editProfile': (context) => const EditProfile(),
         //'/addEmergencyContact': (context)=> const AddEmergencyContact(mapEdit:false , o,)
       },
     );

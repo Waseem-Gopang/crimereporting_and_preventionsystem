@@ -61,6 +61,16 @@ class AuthService {
     return user!.uid;
   }
 
+  Future getUserData(String userId) async {
+    final snapshot = await ref.child('users/$userId').get();
+    if (snapshot.exists) {
+      print(snapshot.value);
+      return snapshot.value;
+    } else {
+      print('No data available.');
+    }
+  }
+
 //google sign in method
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final GoogleSignIn googleSignIn = GoogleSignIn();
@@ -173,6 +183,15 @@ class AuthService {
       return isDuplicate;
     } else {
       return isDuplicate;
+    }
+  }
+
+  Future getSOSData(String userId) async {
+    final snapshot = await ref.child('sos/$userId').get();
+    if (snapshot.exists) {
+      return snapshot.value;
+    } else {
+      print('No data available.');
     }
   }
 }
