@@ -135,9 +135,9 @@ class AuthService {
 //github sign in method
   final GitHubSignIn githubSignIn = GitHubSignIn(
     clientId: '8f3fe3cb0f3226744ffd',
+    clientSecret: 'b2eadcf062d42bc5da3fdb018d77abb5daec9dc1',
     redirectUrl:
         'https://crimereportingandprevent-22511.firebaseapp.com/__/auth/handler',
-    clientSecret: 'b2eadcf062d42bc5da3fdb018d77abb5daec9dc1',
   );
 
   Future<void> githubLogin(BuildContext context) async {
@@ -145,11 +145,24 @@ class AuthService {
       final result = await githubSignIn.signIn(context);
 
       if (result.status == GitHubSignInResultStatus.ok) {
-        Get.snackbar("Congratulation!", "You have successfully Signed In.",
-            duration: const Duration(seconds: 5),
-            backgroundColor: Colors.green,
-            colorText: Colors.white);
-        Get.offAllNamed('/home');
+        final AuthCredential credential =
+            GithubAuthProvider.credential(result.token!);
+
+        // Sign in to Firebase with the obtained GitHub token
+        final UserCredential userCredential =
+            await FirebaseAuth.instance.signInWithCredential(credential);
+
+        if (userCredential.user != null) {
+          Get.snackbar("Congratulations!", "You have successfully signed in.",
+              duration: const Duration(seconds: 5),
+              backgroundColor: Colors.green,
+              colorText: Colors.white);
+          Get.offAllNamed('/home');
+        } else {
+          Get.snackbar("Failed!", "Firebase authentication failed.",
+              duration: const Duration(seconds: 7),
+              backgroundColor: Colors.lightBlueAccent);
+        }
       } else {
         Get.snackbar("Failed!", "GitHub login failed or canceled.",
             duration: const Duration(seconds: 7),

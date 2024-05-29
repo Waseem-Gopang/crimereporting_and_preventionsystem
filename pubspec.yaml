@@ -37,7 +37,7 @@ dependencies:
   cupertino_icons: ^1.0.2
   hexcolor: ^3.0.1
   flutter_svg: ^2.0.9
-  intl: ^0.19.0
+  intl: 
   image_picker: ^1.0.5
   csc_picker: ^0.2.7
   fluttertoast: ^8.2.4
@@ -73,6 +73,8 @@ dependencies:
   path_provider: ^2.1.2
   syncfusion_flutter_pdfviewer: ^20.4.54
   quickalert: ^1.0.2
+  zego_uikit_prebuilt_live_streaming: 
+  
 
 dev_dependencies:
   flutter_test:

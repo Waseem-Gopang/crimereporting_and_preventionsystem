@@ -1,4 +1,3 @@
-import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 
 class CustomBottomNavigationBar extends StatefulWidget {
@@ -15,6 +14,7 @@ class CustomBottomNavigationBar extends StatefulWidget {
 
 class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
   late int _selectedIndex;
+
   final List<IconData> _iconList = [
     Icons.map,
     Icons.local_police_outlined,
@@ -22,6 +22,7 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
     Icons.remove_red_eye_outlined,
     Icons.contact_emergency_outlined,
   ];
+
   final List<String> _textList = [
     'Crime Locations',
     'Crime Report',
@@ -30,51 +31,33 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
     'Emergency Off.',
   ];
 
+  final List<Color> _iconColors = [
+    Colors.grey,
+    Colors.grey,
+    Colors.grey,
+    Colors.grey,
+    Colors.grey,
+  ];
+
+  final List<Color> _selectedIconColors = [
+    Colors.red,
+    Colors.red,
+    Colors.red,
+    Colors.red,
+    Colors.red,
+  ];
+
   @override
   void initState() {
     super.initState();
     _selectedIndex = widget.defaultSelectedIndex;
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return CurvedNavigationBar(
-      index: _selectedIndex,
-      height: 75.0,
-      items: List.generate(_iconList.length, (index) {
-        return Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              _iconList[index],
-              size: 30,
-              color:
-                  _selectedIndex == index ? Colors.red.shade900 : Colors.grey,
-            ),
-            Text(
-              _textList[index],
-              style: TextStyle(
-                fontSize: 10,
-                color:
-                    _selectedIndex == index ? Colors.red.shade900 : Colors.grey,
-              ),
-            ),
-          ],
-        );
-      }),
-      color: Colors.red.shade100,
-      buttonBackgroundColor: Colors.yellow,
-      backgroundColor: Colors.white,
-      animationCurve: Curves.easeInOut,
-      animationDuration: const Duration(milliseconds: 600),
-      onTap: (index) {
-        setState(() {
-          _selectedIndex = index;
-        });
-        navigateBottom(index);
-      },
-      letIndexChange: (index) => true,
-    );
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+    navigateBottom(index);
   }
 
   void navigateBottom(int index) {
@@ -93,11 +76,58 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
         route = "/awareness";
         break;
       case 4:
-        route = "/emergencyOfficial";
+        route = "/emergency Official";
         break;
       default:
         return;
     }
     Navigator.pushReplacementNamed(context, route);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.transparent,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.1),
+            spreadRadius: 1,
+            blurRadius: 7,
+            offset: const Offset(0, 3), // changes position of shadow
+          ),
+        ],
+      ),
+      child: ClipRRect(
+        borderRadius: const BorderRadius.only(
+          topLeft: Radius.circular(40),
+          topRight: Radius.circular(40),
+        ),
+        child: BottomNavigationBar(
+          currentIndex: _selectedIndex,
+          onTap: _onItemTapped,
+          items: List.generate(_iconList.length, (index) {
+            return BottomNavigationBarItem(
+              icon: Icon(
+                _iconList[index],
+                color: _iconColors[index],
+              ),
+              activeIcon: Icon(
+                _iconList[index],
+                color: _selectedIconColors[index],
+              ),
+              label: _textList[index],
+              backgroundColor: Colors.white,
+            );
+          }),
+          selectedItemColor: Colors.red,
+          unselectedItemColor: _iconColors[_selectedIndex],
+          type: BottomNavigationBarType.shifting,
+          elevation: 2,
+          showSelectedLabels: true,
+          showUnselectedLabels: true,
+        ),
+      ),
+    );
   }
 }

@@ -1,8 +1,11 @@
 import 'package:crimereporting_and_preventionsystem/drawer/components/add_contact_popup.dart';
+import 'package:crimereporting_and_preventionsystem/drawer/components/livestream.dart';
 import 'package:crimereporting_and_preventionsystem/drawer/components/send_email.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class CustomDrawer extends StatefulWidget {
   const CustomDrawer({Key? key}) : super(key: key);
@@ -33,34 +36,30 @@ class _CustomDrawerState extends State<CustomDrawer> {
     if (snapshot.exists) {
       Map data = snapshot.value as Map;
       setState(() {
-        imageURL = data['avatar'] ?? currentUser.photoURL ?? imageURL;
-        //haveImage = imageURL.isNotEmpty;
+        imageURL = data['avatar'] ?? currentUser.photoURL;
       });
     } else {
-      // If no data in database, use Google account information
       setState(() {
-        imageURL = currentUser.photoURL ?? imageURL;
+        imageURL = currentUser.photoURL;
       });
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    User currentUser = FirebaseAuth.instance.currentUser!;
-    String displayName = getDisplayName(currentUser);
+    User? currentUser = FirebaseAuth.instance.currentUser;
+    String displayName = getDisplayName(currentUser!);
     return SizedBox(
       width: 300,
       child: Drawer(
+        backgroundColor: Colors.transparent,
         elevation: 16,
         child: Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [
-                Colors.red.shade800,
-                Colors.red.shade700,
-              ],
+          decoration: const BoxDecoration(
+            color: Colors.red,
+            borderRadius: BorderRadius.only(
+              topRight: Radius.circular(55),
+              bottomRight: Radius.circular(55),
             ),
           ),
           child: Padding(
@@ -68,75 +67,50 @@ class _CustomDrawerState extends State<CustomDrawer> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Container(
-                  padding: const EdgeInsets.only(
-                      top: 20, right: 10, left: 10, bottom: 10),
-                  color: Colors.grey,
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      getAvatar(),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 2.0, left: 10),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              displayName,
-                              style: const TextStyle(
-                                  fontSize: 16, fontWeight: FontWeight.bold),
-                            ),
-                            TextButton(
-                                onPressed: () {
-                                  Navigator.pushNamed(context, '/editProfile');
-                                },
-                                child: Row(
-                                  children: [
-                                    Text(
-                                      "Edit Profile",
-                                      style: TextStyle(
-                                          fontSize: 18,
-                                          color: Colors.red.shade900),
-                                    ),
-                                    Icon(
-                                      Icons.chevron_right,
-                                      color: Colors.red.shade900,
-                                      size: 25,
-                                    )
-                                  ],
-                                ))
-                          ],
-                        ),
-                      )
-                    ],
-                  ),
+                buildProfileHeader(displayName),
+                const SizedBox(height: 20),
+                buildDrawerItem(
+                  icon: Icons.edit,
+                  text: "Edit Profile",
+                  onTap: () {
+                    Navigator.pushNamed(context, '/editProfile');
+                  },
                 ),
-                getTextButton(
+                const SizedBox(height: 20),
+                buildDrawerItem(
+                  icon: Icons.feedback,
                   text: "Send Feedback",
                   onTap: () {
                     getSendFeedbackPopUp();
                   },
                 ),
                 const SizedBox(height: 20),
-                getHeaderText("SOS Message"),
-                const SizedBox(height: 10),
-                getTextButton(
-                  text: "Edit SOS Message Content",
+                buildDrawerItem(
+                  icon: Icons.message,
+                  text: "Edit SOS Message",
                   onTap: () {
                     Navigator.of(context).pushNamed('/editSOS');
                   },
                 ),
                 const SizedBox(height: 20),
-                getHeaderText("Emergency Contacts"),
-                const SizedBox(height: 10),
-                getTextButton(
-                  text: "Add Emergency Contacts",
+                buildDrawerItem(
+                    icon: Icons.videocam,
+                    text: "SOS Live Stream",
+                    onTap: () {
+                      jumpToLiveStream(currentUser as String, true);
+                    }),
+                const SizedBox(height: 20),
+                buildDrawerItem(
+                  icon: Icons.person_add,
+                  text: "Add Contacts",
                   onTap: () {
                     getContactFormPopUp();
                   },
                 ),
-                getTextButton(
-                  text: "Manage Emergency Contacts",
+                const SizedBox(height: 20),
+                buildDrawerItem(
+                  icon: Icons.manage_accounts,
+                  text: "Manage Contacts",
                   onTap: () {
                     Navigator.pushNamed(context, '/manageContact');
                   },
@@ -159,88 +133,112 @@ class _CustomDrawerState extends State<CustomDrawer> {
     return 'User';
   }
 
-  Widget getHeaderText(String text) {
-    return Text(
-      text,
-      style: const TextStyle(
-        color: Colors.white,
-        fontSize: 22,
-        fontWeight: FontWeight.bold,
+  Widget buildProfileHeader(String displayName) {
+    return SafeArea(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            "WELCOME",
+            style: GoogleFonts.satisfy(
+                color: Colors.white, fontSize: 24, fontWeight: FontWeight.w600),
+          ),
+          const SizedBox(height: 20),
+          Center(child: getAvatar()),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(displayName,
+                  style: GoogleFonts.satisfy(
+                      color: Colors.white,
+                      fontSize: 24,
+                      fontWeight: FontWeight.w600)),
+            ],
+          ),
+        ],
       ),
     );
   }
 
-  Widget getTextButton({String? text, Function()? onTap}) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 10),
-        child: Text(
-          text!,
-          style: const TextStyle(
-            color: Colors.white,
-            fontSize: 20,
-          ),
+  Widget getHeaderText(String text) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 10),
+      child: Text(
+        text,
+        style: const TextStyle(
+          color: Colors.white,
+          fontSize: 25,
+          fontWeight: FontWeight.bold,
         ),
       ),
     );
   }
 
-  getAvatar() {
-    return imageURL != ""
-        ? Container(
-            height: 85.0,
-            width: 80,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              image: DecorationImage(
-                image: NetworkImage(imageURL!),
-                fit: BoxFit.cover,
-              ), // border color
-              borderRadius: const BorderRadius.all(Radius.circular(50.0)),
-              border: Border.all(
-                color: Colors.red.shade900,
-                width: 1.0,
-              ),
-            ),
-            child: Container())
-        : Container(
-            height: 85.0,
-            width: 80,
-            decoration: BoxDecoration(
-              color: Colors.white, // border color
-              borderRadius: const BorderRadius.all(Radius.circular(50.0)),
-              border: Border.all(
-                color: Colors.red.shade900,
-                width: 3.0,
-              ),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.only(right: 5.0),
-              child: Icon(
-                Icons.person,
-                color: Colors.red.shade900,
-                size: 78.0,
-              ),
-            ));
+  Widget buildDrawerItem(
+      {required IconData icon,
+      required String text,
+      required VoidCallback onTap}) {
+    return ListTile(
+      leading: Icon(icon, color: Colors.white),
+      title: Text(
+        text,
+        style: const TextStyle(
+          fontSize: 18,
+          color: Colors.white,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+      onTap: onTap,
+      contentPadding: const EdgeInsets.symmetric(horizontal: 0),
+      horizontalTitleGap: 10,
+      dense: true,
+      visualDensity: VisualDensity.compact,
+    );
   }
 
-  getSendFeedbackPopUp() {
-    return showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return const SendEmail(title: "Feedback");
-        });
+  Widget getAvatar() {
+    return CircleAvatar(
+      radius: 60,
+      backgroundColor: Colors.red.shade900,
+      backgroundImage: imageURL != "" ? NetworkImage(imageURL!) : null,
+      child: imageURL == ""
+          ? const Icon(Icons.person, color: Colors.white, size: 40)
+          : null,
+    );
   }
 
-  getContactFormPopUp() {
-    return showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AddEmergencyContact(
-            mapEdit: null,
-            onEdit: (value) {},
-          );
-        });
+  void getSendFeedbackPopUp() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return const SendEmail(title: "Feedback");
+      },
+    );
+  }
+
+  void getContactFormPopUp() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AddEmergencyContact(
+          mapEdit: null,
+          onEdit: (value) {},
+        );
+      },
+    );
+  }
+
+  jumpToLiveStream(String liveId, bool isHost) {
+    if (liveId.isNotEmpty) {
+      Get.to(
+        () => LiveStreamingPage(
+          liveId: liveId,
+          isHost: isHost,
+        ),
+      );
+    } else {
+      Get.snackbar("Error", "Please enter a valid ID");
+    }
   }
 }

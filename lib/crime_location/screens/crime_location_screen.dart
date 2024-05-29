@@ -120,7 +120,7 @@ class _CrimeAlertsScreenState extends State<CrimeAlertsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: customAppBar(title: 'Crime Alerts'),
+      appBar: customAppBar(title: 'Crime Locations'),
       body: Stack(
         children: [
           GoogleMap(
