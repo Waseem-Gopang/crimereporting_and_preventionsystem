@@ -15,15 +15,28 @@ class MessageController extends GetxController {
 
   Future<void> _sendSMS(String message, List<String> recipients) async {
     for (var recipient in recipients) {
-      SmsStatus status = await BackgroundSms.sendMessage(
-        phoneNumber: recipient,
-        message: message,
-      );
+      try {
+        SmsStatus status = await BackgroundSms.sendMessage(
+          phoneNumber: recipient,
+          message: message,
+        );
 
-      if (status == SmsStatus.sent) {
-        Get.snackbar("SMS", "Distress SMS Sent Successfully");
-      } else {
-        Get.snackbar("SMS", "Failed to send SMS to $recipient");
+        if (status == SmsStatus.sent) {
+          Get.snackbar("SMS", "Distress SMS Sent Successfully to $recipient",
+              duration: const Duration(seconds: 3),
+              backgroundColor: Colors.green,
+              colorText: Colors.white);
+        } else {
+          Get.snackbar("SMS", "Failed to send SMS to $recipient",
+              duration: const Duration(seconds: 3),
+              backgroundColor: Colors.green,
+              colorText: Colors.white);
+        }
+      } catch (e) {
+        Get.snackbar("Error", "Failed to send SMS: ${e.toString()}",
+            duration: const Duration(seconds: 3),
+            backgroundColor: Colors.green,
+            colorText: Colors.white);
       }
     }
   }
@@ -35,7 +48,10 @@ class MessageController extends GetxController {
     serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
       Get.snackbar("Disabled",
-          'Location services are disabled. Please enable the services');
+          'Location services are disabled. Please enable the services',
+          duration: const Duration(seconds: 3),
+          backgroundColor: Colors.green,
+          colorText: Colors.white);
       return false;
     }
 
@@ -43,14 +59,20 @@ class MessageController extends GetxController {
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
       if (permission == LocationPermission.denied) {
-        Get.snackbar("Rejected", 'Location Permissions are denied.');
+        Get.snackbar("Rejected", 'Location Permissions are denied.',
+            duration: const Duration(seconds: 3),
+            backgroundColor: Colors.green,
+            colorText: Colors.white);
         return false;
       }
     }
 
     if (permission == LocationPermission.deniedForever) {
       Get.snackbar("Rejected",
-          'Location permissions are permanently denied, we cannot request permissions.');
+          'Location permissions are permanently denied, we cannot request permissions.',
+          duration: const Duration(seconds: 3),
+          backgroundColor: Colors.green,
+          colorText: Colors.white);
       return false;
     }
 
@@ -63,6 +85,11 @@ class MessageController extends GetxController {
       debugPrint("SMS Permission Granted");
       return true;
     } else {
+      Get.snackbar("Permission Denied",
+          "SMS Permission Denied. Please enable it in settings.",
+          duration: const Duration(seconds: 3),
+          backgroundColor: Colors.green,
+          colorText: Colors.white);
       debugPrint("SMS Permission Denied");
       return false;
     }
@@ -121,6 +148,9 @@ class MessageController extends GetxController {
   }
 
   Future<void> sendLocationViaSMS(String emergencyType) async {
+    bool smsPermissionGranted = await handleSmsPermission();
+    if (!smsPermissionGranted) return;
+
     await getCurrentPosition().then((currentPosition) async {
       _currentPosition = currentPosition;
       await _getAddressFromLatLng(_currentPosition!);
@@ -132,10 +162,16 @@ class MessageController extends GetxController {
         if (emergencyContacts.isNotEmpty) {
           await _sendSMS(message, emergencyContacts);
         } else {
-          Get.snackbar("Error", "No emergency contacts found.");
+          Get.snackbar("Error", "No emergency contacts found.",
+              duration: const Duration(seconds: 3),
+              backgroundColor: Colors.green,
+              colorText: Colors.white);
         }
       } else {
-        Get.snackbar("Error", "Unable to retrieve address.");
+        Get.snackbar("Error", "Unable to retrieve address.",
+            duration: const Duration(seconds: 3),
+            backgroundColor: Colors.green,
+            colorText: Colors.white);
       }
     });
   }

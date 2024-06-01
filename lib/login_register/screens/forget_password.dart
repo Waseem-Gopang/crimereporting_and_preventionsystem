@@ -25,26 +25,48 @@ class _ForgetPasswordState extends State<ForgetPassword> {
     super.dispose();
   }
 
-  Future<void> resetPass(BuildContext context) async {
+  Future<void> resetPass(BuildContext context, String email) async {
     try {
-      await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
-      Get.snackbar("Success", "Password reset link has been sent to your email",
-          duration: const Duration(seconds: 7),
-          backgroundColor: Colors.lightBlueAccent);
-    } on FirebaseAuthException catch (e) {
-      if (e.code == 'user-not-found') {
-        Get.snackbar("Failed", "No user found with this email",
-            duration: const Duration(seconds: 7),
-            backgroundColor: Colors.lightBlueAccent);
+      // Check if the email is registered
+      List<String> signInMethods =
+          await FirebaseAuth.instance.fetchSignInMethodsForEmail(email);
+
+      if (signInMethods.isNotEmpty) {
+        // Email is registered, send password reset email
+        await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
+        Get.snackbar(
+          "Success!",
+          "Password reset link has been sent to your email",
+          duration: const Duration(seconds: 3),
+          backgroundColor: Colors.green,
+          colorText: Colors.white,
+        );
       } else {
-        Get.snackbar("Error", e.message ?? "An unexpected error occurred",
-            duration: const Duration(seconds: 7),
-            backgroundColor: Colors.lightBlueAccent);
+        // Email is not registered
+        Get.snackbar(
+          "Failed!",
+          "No user found with this email. Please check for typos!",
+          duration: const Duration(seconds: 3),
+          backgroundColor: Colors.red,
+          colorText: Colors.white,
+        );
       }
+    } on FirebaseAuthException catch (e) {
+      Get.snackbar(
+        "Error",
+        e.message ?? "An unexpected error occurred",
+        duration: const Duration(seconds: 3),
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
     } catch (error) {
-      Get.snackbar("Error", error.toString(),
-          duration: const Duration(seconds: 7),
-          backgroundColor: Colors.lightBlueAccent);
+      Get.snackbar(
+        "Error",
+        error.toString(),
+        duration: const Duration(seconds: 3),
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
     }
   }
 
@@ -117,7 +139,7 @@ class _ForgetPasswordState extends State<ForgetPassword> {
                                 if (_formKey.currentState!.validate()) {
                                   setState(() {
                                     email = emailController.text;
-                                    resetPass(context);
+                                    resetPass(context, email);
                                   });
                                 }
                               },

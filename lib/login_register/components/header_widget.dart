@@ -97,15 +97,11 @@ class ShapeClipper extends CustomClipper<Path> {
 
     path.lineTo(0.0, size.height - 20);
 
-    // path.quadraticBezierTo(size.width/5, size.height, size.width/2, size.height-40);
-    // path.quadraticBezierTo(size.width/5*4, size.height-80, size.width, size.height-20);
-
     path.quadraticBezierTo(
         offsets[0].dx, offsets[0].dy, offsets[1].dx, offsets[1].dy);
     path.quadraticBezierTo(
         offsets[2].dx, offsets[2].dy, offsets[3].dx, offsets[3].dy);
 
-    // path.lineTo(size.width, size.height-20);
     path.lineTo(size.width, 0.0);
     path.close();
 

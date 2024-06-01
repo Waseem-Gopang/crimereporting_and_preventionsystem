@@ -28,7 +28,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   var uID;
   String fName = "";
-  String uName = "";
   String iNo = "";
   String pass = "";
   String cPass = "";
@@ -303,9 +302,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
         maxWidth: 500);
     if (pickedFile != null) {
       image = File(pickedFile.path);
-      setState(() {
-        print('The file name is :$image');
-      });
     }
   }
 
@@ -501,7 +497,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     }
 
     Get.snackbar("Congratulation!", "Account Created Successfully.",
-        duration: const Duration(seconds: 5),
+        duration: const Duration(seconds: 3),
         backgroundColor: Colors.green,
         colorText: Colors.white);
     Get.offAllNamed("/login");

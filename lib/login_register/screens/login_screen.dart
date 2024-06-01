@@ -174,7 +174,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                     if (user != null) {
                                       Get.snackbar("Congratulation!",
                                           "You have successfully Signed In.",
-                                          duration: const Duration(seconds: 5),
+                                          duration: const Duration(seconds: 3),
                                           backgroundColor: Colors.green,
                                           colorText: Colors.white);
                                       Get.offAllNamed('/home');
@@ -272,17 +272,10 @@ class _LoginScreenState extends State<LoginScreen> {
           var value = AuthService().signIn(email, pass);
           //check if user credentials are correct
           if (value != false) {
-            //assign userID
-            //uID = value;
-            //get userInfo from database
-            // userInfo = await getUserData(uID!);
-            //assign userID to global User instance
-            //  Global.instance.user!.setUserInfo(uID!, userInfo!);
             Get.snackbar("Congratulation!", "You have successfully Signed In.",
-                duration: const Duration(seconds: 5),
+                duration: const Duration(seconds: 3),
                 backgroundColor: Colors.green,
                 colorText: Colors.white);
-            // Get.toNamed("/home");
 
             Navigator.of(context).pushNamedAndRemoveUntil(
                 '/home', (Route<dynamic> route) => false);
