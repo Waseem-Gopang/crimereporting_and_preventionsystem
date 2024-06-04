@@ -15,7 +15,7 @@ class AuthService {
   Stream<User?> get authStateChanges => _auth.authStateChanges();
 
 //Sign In by email method
-  Future signIn(String email, String password) async {
+  Future<String?> signIn(String email, String password) async {
     try {
       User? user = (await FirebaseAuth.instance
               .signInWithEmailAndPassword(email: email, password: password))
@@ -25,11 +25,7 @@ class AuthService {
       prefs.setString("userID", user!.uid);
       return user.uid;
     } catch (e) {
-      Fluttertoast.showToast(msg: e.toString());
-      Get.snackbar("Error:", e.toString(),
-          duration: const Duration(seconds: 7),
-          backgroundColor: Colors.lightBlueAccent);
-      return false;
+      return null;
     }
   }
 
@@ -50,8 +46,9 @@ class AuthService {
       return false;
     } catch (e) {
       Get.snackbar("Error:", e.toString(),
-          duration: const Duration(seconds: 7),
-          backgroundColor: Colors.lightBlueAccent);
+          duration: const Duration(seconds: 3),
+          backgroundColor: Colors.red,
+          colorText: Colors.white);
     }
   }
 
@@ -64,10 +61,10 @@ class AuthService {
   Future getUserData(String userId) async {
     final snapshot = await ref.child('users/$userId').get();
     if (snapshot.exists) {
-      print(snapshot.value);
+      debugPrint(snapshot.value as String?);
       return snapshot.value;
     } else {
-      print('No data available.');
+      debugPrint('No data available.');
     }
   }
 
@@ -77,6 +74,9 @@ class AuthService {
 
   Future<User?> signInWithGoogle() async {
     try {
+      // Sign out from Google to ensure the account selection prompt
+      await googleSignIn.signOut();
+
       final GoogleSignInAccount? googleSignInAccount =
           await googleSignIn.signIn();
       if (googleSignInAccount == null) return null;
@@ -94,8 +94,9 @@ class AuthService {
       return user;
     } catch (e) {
       Get.snackbar("Google Sign-In Error: ", e.toString(),
-          duration: const Duration(seconds: 7),
-          backgroundColor: Colors.lightBlueAccent);
+          duration: const Duration(seconds: 3),
+          backgroundColor: Colors.red,
+          colorText: Colors.white);
       return null;
     }
   }
@@ -115,20 +116,22 @@ class AuthService {
         final User? user = authResult.user;
         if (user != null) {
           Get.snackbar("Congratulation!", "You have successfully Signed In.",
-              duration: const Duration(seconds: 5),
+              duration: const Duration(seconds: 3),
               backgroundColor: Colors.green,
               colorText: Colors.white);
           Get.offAllNamed('/home');
         }
       } else {
         Get.snackbar('Failed!', "Facebook login failed",
-            duration: const Duration(seconds: 7),
-            backgroundColor: Colors.lightBlueAccent);
+            duration: const Duration(seconds: 3),
+            backgroundColor: Colors.red,
+            colorText: Colors.white);
       }
     } catch (e) {
       Get.snackbar('Error:', e.toString(),
-          duration: const Duration(seconds: 7),
-          backgroundColor: Colors.lightBlueAccent);
+          duration: const Duration(seconds: 3),
+          backgroundColor: Colors.red,
+          colorText: Colors.white);
     }
   }
 
@@ -154,24 +157,27 @@ class AuthService {
 
         if (userCredential.user != null) {
           Get.snackbar("Congratulations!", "You have successfully signed in.",
-              duration: const Duration(seconds: 5),
+              duration: const Duration(seconds: 3),
               backgroundColor: Colors.green,
               colorText: Colors.white);
           Get.offAllNamed('/home');
         } else {
           Get.snackbar("Failed!", "Firebase authentication failed.",
-              duration: const Duration(seconds: 7),
-              backgroundColor: Colors.lightBlueAccent);
+              duration: const Duration(seconds: 3),
+              backgroundColor: Colors.red,
+              colorText: Colors.white);
         }
       } else {
         Get.snackbar("Failed!", "GitHub login failed or canceled.",
-            duration: const Duration(seconds: 7),
-            backgroundColor: Colors.lightBlueAccent);
+            duration: const Duration(seconds: 3),
+            backgroundColor: Colors.red,
+            colorText: Colors.white);
       }
     } catch (error) {
       Get.snackbar('Error during GitHub login:', error.toString(),
-          duration: const Duration(seconds: 7),
-          backgroundColor: Colors.lightBlueAccent);
+          duration: const Duration(seconds: 3),
+          backgroundColor: Colors.red,
+          colorText: Colors.white);
     }
   }
 
@@ -196,15 +202,6 @@ class AuthService {
       return isDuplicate;
     } else {
       return isDuplicate;
-    }
-  }
-
-  Future getSOSData(String userId) async {
-    final snapshot = await ref.child('sos/$userId').get();
-    if (snapshot.exists) {
-      return snapshot.value;
-    } else {
-      print('No data available.');
     }
   }
 }

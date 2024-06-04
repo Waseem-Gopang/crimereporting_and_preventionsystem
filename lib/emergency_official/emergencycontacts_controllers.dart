@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class EmergencyContactsController extends GetxController {
@@ -21,7 +22,13 @@ class EmergencyContactsController extends GetxController {
         });
       }
     } catch (e) {
-      Get.snackbar("Error", "Failed to load emergency contacts: $e");
+      Get.snackbar(
+        "Error",
+        "Failed to load emergency contacts: $e",
+        duration: const Duration(seconds: 3),
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
     }
     return emergencyContacts;
   }

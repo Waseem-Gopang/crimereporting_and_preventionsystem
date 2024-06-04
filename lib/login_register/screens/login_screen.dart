@@ -167,6 +167,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                         'assets/icons/facebook.png'),
                                   ),
                                 ),
+                                const SizedBox(width: 20),
                                 IconButton(
                                   onPressed: () async {
                                     var user =
@@ -187,6 +188,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                         Image.asset('assets/icons/google.png'),
                                   ),
                                 ),
+                                const SizedBox(width: 20),
                                 IconButton(
                                   onPressed: () async {
                                     await AuthService().githubLogin(context);
@@ -269,16 +271,31 @@ class _LoginScreenState extends State<LoginScreen> {
           ),
         ),
         onPressed: () async {
-          var value = AuthService().signIn(email, pass);
-          //check if user credentials are correct
-          if (value != false) {
-            Get.snackbar("Congratulation!", "You have successfully Signed In.",
-                duration: const Duration(seconds: 3),
-                backgroundColor: Colors.green,
-                colorText: Colors.white);
+          var userId = await AuthService().signIn(email, pass);
 
+// Check if user credentials are correct
+          if (userId != null) {
+            // If sign-in is successful, show a success message
+            Get.snackbar(
+              "Congratulations!",
+              "You have successfully Signed In.",
+              duration: const Duration(seconds: 3),
+              backgroundColor: Colors.green,
+              colorText: Colors.white,
+            );
+
+            // Navigate to the home screen and remove all previous routes
             Navigator.of(context).pushNamedAndRemoveUntil(
                 '/home', (Route<dynamic> route) => false);
+          } else {
+            // If sign-in fails, show an error message
+            Get.snackbar(
+              "Error",
+              "Invalid email or password. Please try again.",
+              duration: const Duration(seconds: 3),
+              backgroundColor: Colors.red,
+              colorText: Colors.white,
+            );
           }
         },
       ),

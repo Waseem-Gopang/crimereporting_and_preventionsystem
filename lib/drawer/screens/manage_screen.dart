@@ -38,7 +38,7 @@ class _ManageEmergencyContactState extends State<ManageEmergencyContact> {
         haveContact = true;
       });
     }, onError: (error) {
-      print('Error getting contacts');
+      debugPrint('Error getting contacts');
     });
   }
 
@@ -101,11 +101,9 @@ class _ManageEmergencyContactState extends State<ManageEmergencyContact> {
                   ),
                 );
               })
-          : Container(
-              child: const Text(
-                'No contacts added yet!',
-                style: TextStyle(fontSize: 20),
-              ),
+          : const Text(
+              'No contacts added yet!',
+              style: TextStyle(fontSize: 20),
             ),
     );
   }

@@ -1,6 +1,5 @@
 import 'package:background_sms/background_sms.dart';
 import 'package:crimereporting_and_preventionsystem/home.dart';
-import 'package:crimereporting_and_preventionsystem/service/firebase.dart';
 import 'package:crimereporting_and_preventionsystem/utils/custom_widget.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -50,22 +49,22 @@ class _EditSOSContentState extends State<EditSOSContent> {
     }
   }
 
-  getInfo() async {
-    var data = await AuthService().getSOSData(user.uid);
+  // getInfo() async {
+  //   var data = await AuthService().getSOSData(user.uid);
 
-    if (data != null && data.containsKey("info")) {
-      List<dynamic>? infoData = data["info"];
-      if (infoData != null) {
-        for (var dt in infoData) {
-          Map info = dt;
-          infoList.add(Info(info.keys.first, info.values.first));
-        }
-        setState(() {
-          haveInfo = true;
-        });
-      }
-    }
-  }
+  //   if (data != null && data.containsKey("info")) {
+  //     List<dynamic>? infoData = data["info"];
+  //     if (infoData != null) {
+  //       for (var dt in infoData) {
+  //         Map info = dt;
+  //         infoList.add(Info(info.keys.first, info.values.first));
+  //       }
+  //       setState(() {
+  //         haveInfo = true;
+  //       });
+  //     }
+  //   }
+  // }
 
   getMessage() async {
     location = await getLocation();
@@ -93,7 +92,7 @@ class _EditSOSContentState extends State<EditSOSContent> {
   @override
   void initState() {
     getMessage();
-    getInfo();
+    //getInfo();
     super.initState();
   }
 
@@ -222,7 +221,7 @@ class _EditSOSContentState extends State<EditSOSContent> {
           onAdd: (value) {
             setState(() {
               infoList.add(value);
-              print(infoList);
+              debugPrint(infoList as String?);
               haveInfo = true;
               addtionalInfo += "\n${value.type}: \n${value.description},";
             });

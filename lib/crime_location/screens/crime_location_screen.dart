@@ -72,14 +72,56 @@ class _CrimeAlertsScreenState extends State<CrimeAlertsScreen> {
                   context: context,
                   builder: (BuildContext context) {
                     return AlertDialog(
-                      title: Text(data["type"]),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                      title: Text(
+                        data["type"],
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20,
+                        ),
+                      ),
                       content: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisSize: MainAxisSize.min,
                         children: <Widget>[
-                          Text("Date: ${data["date"]}"),
-                          Text("Time: ${data["time"]}"),
-                          Text("Description: ${data["descr"]}"),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 4.0),
+                            child: Row(
+                              children: [
+                                Icon(Icons.calendar_today, size: 16),
+                                SizedBox(width: 8),
+                                Text("Date: ${data["date"]}"),
+                              ],
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 4.0),
+                            child: Row(
+                              children: [
+                                Icon(Icons.access_time, size: 16),
+                                SizedBox(width: 8),
+                                Text("Time: ${data["time"]}"),
+                              ],
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 4.0),
+                            child: Row(
+                              children: [
+                                Icon(Icons.description, size: 16),
+                                SizedBox(width: 8),
+                                Flexible(
+                                  child: Text(
+                                    "Description: ${data["descr"]}",
+                                    overflow: TextOverflow.ellipsis,
+                                    maxLines: 20,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
                         ],
                       ),
                       actions: <Widget>[
@@ -87,6 +129,13 @@ class _CrimeAlertsScreenState extends State<CrimeAlertsScreen> {
                           onPressed: () {
                             Navigator.of(context).pop();
                           },
+                          style: TextButton.styleFrom(
+                            foregroundColor: Colors.white,
+                            backgroundColor: Colors.blue,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                          ),
                           child: const Text('Close'),
                         ),
                       ],
@@ -100,7 +149,7 @@ class _CrimeAlertsScreenState extends State<CrimeAlertsScreen> {
       }
       setState(() {});
     }, onError: (error) {
-      print('Error getting post List');
+      debugPrint('Error getting post List');
     });
   }
 
@@ -131,31 +180,6 @@ class _CrimeAlertsScreenState extends State<CrimeAlertsScreen> {
               googleMapController = controller;
             },
           ),
-          //Container(
-          // padding: const EdgeInsets.all(10),
-          // child: ElevatedButton(
-          //   onPressed: () {}, //_handlePressButton,
-          //   style: ButtonStyle(
-          //     backgroundColor: MaterialStateProperty.all(Colors.white),
-          //     padding: MaterialStateProperty.all(const EdgeInsets.all(10)),
-          //   ),
-          //   child: Row(
-          //     children: [
-          // Icon(
-          //   Icons.search,
-          //   color: Colors.red.shade900,
-          // ),
-          // const SizedBox(
-          //   width: 10,
-          // ),
-          // Text(
-          //   "Enter Area, City or State",
-          //   style: TextStyle(color: Colors.grey.shade600, fontSize: 16),
-          // )
-          // ],
-          //),
-          //),
-          // ),
           Align(
             alignment: Alignment.bottomCenter,
             child: Padding(
@@ -232,83 +256,6 @@ class _CrimeAlertsScreenState extends State<CrimeAlertsScreen> {
 
     return position;
   }
-
-  // Future<void> _handlePressButton() async {
-  //   try {
-  //     Prediction? p = await PlacesAutocomplete.show(
-  //       context: context,
-  //       apiKey: kGoogleApiKey,
-  //       onError: onError,
-  //       mode: _mode,
-  //       language: 'en',
-  //       strictbounds: false,
-  //       types: [""],
-  //       logo: Container(
-  //         height: 1,
-  //       ),
-  //       decoration: InputDecoration(
-  //         hintText: 'Enter Area, City or State',
-  //         focusedBorder: OutlineInputBorder(
-  //           borderRadius: BorderRadius.circular(20),
-  //           borderSide: const BorderSide(color: Colors.white),
-  //         ),
-  //       ),
-  //       components: [
-  //         Component(Component.country, "pk"),
-  //         Component(Component.country, "usa"),
-  //         Component(Component.country, "my"),
-  //       ],
-  //     );
-
-  //     if (p != null) {
-  //       displayPrediction(p, homeScaffoldKey.currentState);
-  //     } else {
-  //       print('Prediction is null.');
-  //     }
-  //   } catch (error) {
-  //     print('Error during place autocomplete: $error');
-  //   }
-  // }
-
-  // void onError(PlacesAutocompleteResponse response) {
-  //   print('Error during place autocomplete: ${response.errorMessage}');
-  // }
-
-  // Future<void> displayPrediction(
-  //     Prediction p, ScaffoldState? currentState) async {
-  //   try {
-  //     GoogleMapsPlaces places = GoogleMapsPlaces(
-  //       apiKey: kGoogleApiKey,
-  //       apiHeaders: await const GoogleApiHeaders().getHeaders(),
-  //     );
-
-  //     PlacesDetailsResponse detail =
-  //         await places.getDetailsByPlaceId(p.placeId!);
-
-  //     lat = detail.result.geometry!.location.lat;
-  //     lng = detail.result.geometry!.location.lng;
-
-  //     // Add marker for the selected place
-  //     markersList.add(
-  //       Marker(
-  //         markerId: const MarkerId("0"),
-  //         position: LatLng(lat, lng),
-  //         icon:
-  //             BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueViolet),
-  //         infoWindow: InfoWindow(title: detail.result.name),
-  //       ),
-  //     );
-
-  //     // Set camera to the place selected
-  //     setState(() async {
-  //       getCrimeAlerts();
-  //       googleMapController
-  //           .animateCamera(CameraUpdate.newLatLngZoom(LatLng(lat, lng), 14.0));
-  //     });
-  //   } catch (error) {
-  //     print('Error during place details retrieval: $error');
-  //   }
-  // }
 
   void _onMapTypeButtonPressed() {
     setState(() {

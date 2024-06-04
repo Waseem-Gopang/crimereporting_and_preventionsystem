@@ -59,19 +59,27 @@ class _AwarenessState extends State<Awareness> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              Image.asset(
-                pdfData[index]["image"]!,
-                height: 100,
-                width: 100,
+              SizedBox(
+                height: 120,
+                width: 160,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(10),
+                  child: Image.asset(
+                    pdfData[index]["image"]!,
+                    fit: BoxFit.cover,
+                  ),
+                ),
               ),
               Text(
                 pdfData[index]["name"]!,
                 style: GoogleFonts.openSans(
-                    textStyle: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 15,
-                        fontWeight: FontWeight.w600)),
-              )
+                  textStyle: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 15,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
             ],
           ),
         ),
@@ -163,5 +171,9 @@ List<Map<String, String>> pdfData = [
     "name": "Foreign Exchange Act",
     "image": "assets/LegalDocuments/Foreign Exchange Act.jpg"
   },
-  {"name": "Juvenile Act", "image": "assets/LegalDocuments/Juvenile Act.jpg"}
+  {"name": "Juvenile Act", "image": "assets/LegalDocuments/Juvenile Act.jpg"},
+  {
+    "name": "Constitution 1973",
+    "image": "assets/LegalDocuments/Constitution.jpg"
+  }
 ];

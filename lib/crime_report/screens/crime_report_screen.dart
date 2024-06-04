@@ -161,7 +161,7 @@ class _CrimeReportScreenState extends State<CrimeReportScreen> {
                   selectCrimeTypeField(),
                   getCrimeDescField(),
                   getCustomButton(
-                      text: "Add Evidence Media / Files",
+                      text: "Add Evidence Media",
                       background: Colors.black,
                       fontSize: 15,
                       padding: 45,
@@ -170,7 +170,7 @@ class _CrimeReportScreenState extends State<CrimeReportScreen> {
                         selectFiles();
                       }),
                   getShowSelectedImages(),
-                  getSubmitCancelButtonBar()
+                  getSubmitButton()
                 ],
               ),
             ),
@@ -240,7 +240,7 @@ class _CrimeReportScreenState extends State<CrimeReportScreen> {
         lng = position.longitude;
       });
     } catch (error) {
-      print('Error getting current location: $error');
+      debugPrint('Error getting current location: $error');
     }
   }
 
@@ -256,15 +256,15 @@ class _CrimeReportScreenState extends State<CrimeReportScreen> {
         if (data != null && data['display_name'] != null) {
           return data['display_name'];
         } else {
-          print('No address found. Response: ${data.toString()}');
+          debugPrint('No address found. Response: ${data.toString()}');
           return 'No address found';
         }
       } else {
-        print('Error response from Nominatim API: ${response.statusCode}');
+        debugPrint('Error response from Nominatim API: ${response.statusCode}');
         return 'Error: ${response.statusCode}';
       }
     } catch (e) {
-      print('Error retrieving address: $e');
+      debugPrint('Error retrieving address: $e');
       return 'Error: $e';
     }
   }
@@ -503,54 +503,8 @@ class _CrimeReportScreenState extends State<CrimeReportScreen> {
     );
   }
 
-  Future sendEmail(String id) async {
-    final user = FirebaseAuth.instance.currentUser!;
-    const serviceId = 'service_xsnm6c1';
-    const templateId = 'template_up4q9z5';
-    const userId = 'I0cSQ5dcivRQxheSu';
-
-    final url = Uri.parse('https://api.emailjs.com/api/v1.0/email/send');
-
-    final response = await http.post(
-      url,
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: json.encode({
-        'service_id': serviceId,
-        'template_id': templateId,
-        'user_id': userId,
-        'template_params': {
-          'subject': '$id - $type Case at $formattedDate',
-          //'user_contact': user.mobileNo,
-          // 'user_name': user.fName,
-          // 'user_email': user.email,
-          // 'address': '${user.address}, ${user.zipcode}, ${user.city}, '
-          //     '${user.state}, ${user.country}',
-          'date': DateFormat('yyyy-MM-dd').format(DateTime.now()),
-          'crime': type,
-          'in_date': formattedDate,
-          'in_time': formatTimeOfDay(pickedTime!),
-          'in_location': location,
-          'description': description,
-          'evidence_list': evidenceList,
-          'add_details': addDetails,
-        }
-      }),
-    );
-    print(response.body);
-  }
-
-  getSubmitCancelButtonBar() {
-    return Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-      getCustomButton(
-          text: "Cancel",
-          padding: 45,
-          background: Colors.black,
-          fontSize: 16,
-          onPressed: () {
-            Navigator.pushReplacementNamed(context, '/crimeReport');
-          }),
+  getSubmitButton() {
+    return Row(mainAxisAlignment: MainAxisAlignment.center, children: [
       getCustomButton(
           text: "Submit",
           padding: 45,
@@ -686,7 +640,7 @@ class _CrimeReportScreenState extends State<CrimeReportScreen> {
                                                 reportRef
                                                     .child(reportID)
                                                     .child('evidences');
-                                            var url;
+                                            String url;
                                             int index = 1;
                                             selectedFiles.forEach((file) async {
                                               url =
@@ -700,17 +654,14 @@ class _CrimeReportScreenState extends State<CrimeReportScreen> {
                                             });
                                           }
 
-                                          //send email to official services and auto-reply to user
-                                          sendEmail(reportID).whenComplete(() {
-                                            Get.snackbar("Congratulation!",
-                                                "Report Submitted and Emailed to Respected Officials Successfully",
-                                                duration:
-                                                    const Duration(seconds: 5),
-                                                backgroundColor: Colors.green,
-                                                colorText: Colors.white);
-                                            Navigator.pushReplacementNamed(
-                                                context, '/crimeReport');
-                                          });
+                                          Get.snackbar("Congratulation!",
+                                              "Report Submitted Successfully",
+                                              duration:
+                                                  const Duration(seconds: 3),
+                                              backgroundColor: Colors.green,
+                                              colorText: Colors.white);
+                                          Navigator.pushReplacementNamed(
+                                              context, '/crimeReport');
                                         }
                                       }
                                     }),

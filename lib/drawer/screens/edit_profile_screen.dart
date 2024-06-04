@@ -210,10 +210,10 @@ class _EditProfileState extends State<EditProfile> {
     if (pickedFile != null) {
       image = File(pickedFile.path);
       setState(() {
-        print('The file name is :$image');
+        debugPrint('The file name is :$image');
       });
     } else {
-      print('No image selected.');
+      debugPrint('No image selected.');
     }
   }
 
@@ -285,7 +285,7 @@ class _EditProfileState extends State<EditProfile> {
           onPressed: () async {
             if (_formKey.currentState!.validate()) {
               uID = FirebaseAuth.instance.currentUser!.uid;
-              print(uID);
+              debugPrint(uID);
               var iURL = image != null
                   ? await uploadImage(file: image!)
                   : currentUser.photoURL!;
@@ -316,7 +316,6 @@ class _EditProfileState extends State<EditProfile> {
                   //edit user profile in posts data
                   // await editAvatarPostList();
                 }
-                ;
               } else {
                 Fluttertoast.showToast(msg: 'Error Updating user profile');
               }
