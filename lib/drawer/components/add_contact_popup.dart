@@ -118,11 +118,13 @@ class _AddEmergencyContactState extends State<AddEmergencyContact> {
                   style: TextStyle(color: Colors.white),
                 ),
                 onPressed: () {
-                  setState(() {
-                    var contact = Contact(id!, fName!, relation!, contactNo);
-                    widget.onEdit(contact);
-                    Navigator.of(context).pop();
-                  });
+                  if (_formKey.currentState!.validate()) {
+                    setState(() {
+                      var contact = Contact(id!, fName!, relation!, contactNo);
+                      widget.onEdit(contact);
+                      Navigator.of(context).pop();
+                    });
+                  }
                 })
             : ElevatedButton(
                 style: ButtonStyle(
@@ -133,26 +135,28 @@ class _AddEmergencyContactState extends State<AddEmergencyContact> {
                   style: TextStyle(color: Colors.white),
                 ),
                 onPressed: () {
-                  setState(() {
-                    DatabaseReference contactRef = FirebaseDatabase.instance
-                        .ref()
-                        .child('contacts')
-                        .child(uID);
+                  if (_formKey.currentState!.validate()) {
+                    setState(() {
+                      DatabaseReference contactRef = FirebaseDatabase.instance
+                          .ref()
+                          .child('contacts')
+                          .child(uID);
 
-                    String contactID = contactRef.push().key!;
+                      String contactID = contactRef.push().key!;
 
-                    //add new emergency contact information to database
-                    contactRef.child(contactID).set({
-                      'fname': fName,
-                      'relation': relation,
-                      'contactNo': contactNo,
+                      //add new emergency contact information to database
+                      contactRef.child(contactID).set({
+                        'fname': fName,
+                        'relation': relation,
+                        'contactNo': contactNo,
+                      });
+
+                      Fluttertoast.showToast(
+                          msg: "New Contact Added Successfully");
+
+                      Navigator.of(context).pop();
                     });
-
-                    Fluttertoast.showToast(
-                        msg: "New Contact Added Successfully");
-
-                    Navigator.of(context).pop();
-                  });
+                  }
                 }),
       ],
     );
@@ -185,7 +189,7 @@ class _AddEmergencyContactState extends State<AddEmergencyContact> {
                 );
               }).toList(),
               validator: (value) {
-                if (relation == null) {
+                if (value == null || value.isEmpty) {
                   return "Please select your relation";
                 }
                 return null;
@@ -226,7 +230,7 @@ class _AddEmergencyContactState extends State<AddEmergencyContact> {
                 );
               }).toList(),
               validator: (value) {
-                if (relation == null) {
+                if (value == null || value.isEmpty) {
                   return "Please select your relation";
                 }
                 return null;

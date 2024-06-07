@@ -18,6 +18,7 @@ class SendEmail extends StatefulWidget {
 class _SendEmailState extends State<SendEmail> {
   String? message;
   String? email;
+  final _formKey = GlobalKey<FormState>();
 
   final DatabaseReference _feedbackRef =
       FirebaseDatabase.instance.ref().child('feedback');
@@ -30,6 +31,7 @@ class _SendEmailState extends State<SendEmail> {
       content: Padding(
         padding: const EdgeInsets.all(5.0),
         child: Form(
+          key: _formKey,
           child: Column(
             children: <Widget>[getEmailField(), getMessageField()],
           ),
@@ -55,8 +57,10 @@ class _SendEmailState extends State<SendEmail> {
               style: TextStyle(color: Colors.white),
             ),
             onPressed: () {
-              _saveFeedback();
-              Navigator.of(context).pop();
+              if (_formKey.currentState!.validate()) {
+                _saveFeedback();
+                Navigator.of(context).pop();
+              }
             })
       ],
     );
@@ -111,7 +115,7 @@ class _SendEmailState extends State<SendEmail> {
         },
         validator: (val) {
           if (val!.isEmpty) {
-            return "Message Content is empty";
+            return "Message Content is required";
           }
           return null;
         },

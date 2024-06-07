@@ -75,46 +75,74 @@ class _CrimeAlertsScreenState extends State<CrimeAlertsScreen> {
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(15),
                       ),
-                      title: Text(
-                        data["type"],
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 20,
-                        ),
+                      title: Row(
+                        children: [
+                          Expanded(
+                            child: Center(
+                              child: Text(
+                                data["type"],
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 20,
+                                  color: Colors.green,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                       content: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisSize: MainAxisSize.min,
                         children: <Widget>[
                           Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 4.0),
+                            padding: const EdgeInsets.symmetric(vertical: 8.0),
                             child: Row(
                               children: [
-                                Icon(Icons.calendar_today, size: 16),
-                                SizedBox(width: 8),
-                                Text("Date: ${data["date"]}"),
+                                const Icon(Icons.calendar_today,
+                                    size: 20, color: Colors.green),
+                                const SizedBox(width: 8),
+                                Text(
+                                  "${data["date"]}",
+                                  style: const TextStyle(
+                                    fontSize: 16,
+                                    color: Colors.black87,
+                                  ),
+                                ),
                               ],
                             ),
                           ),
                           Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 4.0),
+                            padding: const EdgeInsets.symmetric(vertical: 8.0),
                             child: Row(
                               children: [
-                                Icon(Icons.access_time, size: 16),
-                                SizedBox(width: 8),
-                                Text("Time: ${data["time"]}"),
+                                const Icon(Icons.access_time,
+                                    size: 20, color: Colors.green),
+                                const SizedBox(width: 8),
+                                Text(
+                                  "${data["time"]}",
+                                  style: const TextStyle(
+                                    fontSize: 16,
+                                    color: Colors.black87,
+                                  ),
+                                ),
                               ],
                             ),
                           ),
                           Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 4.0),
+                            padding: const EdgeInsets.symmetric(vertical: 8.0),
                             child: Row(
                               children: [
-                                Icon(Icons.description, size: 16),
-                                SizedBox(width: 8),
+                                const Icon(Icons.description,
+                                    size: 20, color: Colors.green),
+                                const SizedBox(width: 8),
                                 Flexible(
                                   child: Text(
-                                    "Description: ${data["descr"]}",
+                                    "${data["descr"]}",
+                                    style: const TextStyle(
+                                      fontSize: 16,
+                                      color: Colors.black87,
+                                    ),
                                     overflow: TextOverflow.ellipsis,
                                     maxLines: 20,
                                   ),
@@ -131,7 +159,9 @@ class _CrimeAlertsScreenState extends State<CrimeAlertsScreen> {
                           },
                           style: TextButton.styleFrom(
                             foregroundColor: Colors.white,
-                            backgroundColor: Colors.blue,
+                            backgroundColor: Colors.green,
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 16, vertical: 8),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(8),
                             ),
@@ -219,7 +249,7 @@ class _CrimeAlertsScreenState extends State<CrimeAlertsScreen> {
                 onPressed: _onMapTypeButtonPressed,
                 materialTapTargetSize: MaterialTapTargetSize.padded,
                 backgroundColor: Colors.red,
-                child: const Icon(Icons.map, size: 32.0),
+                child: const Icon(Icons.satellite_alt_outlined, size: 32.0),
               )),
         ],
       ),

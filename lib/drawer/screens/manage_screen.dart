@@ -66,7 +66,7 @@ class _ManageEmergencyContactState extends State<ManageEmergencyContact> {
                         leading: Text(contactList[index].relation!),
                         title: Text(contactList[index].fname!),
                         subtitle: Text(contactList[index].contactNo!),
-                        trailing: Container(
+                        trailing: SizedBox(
                           width: 100,
                           child: Row(
                             children: [

@@ -16,9 +16,7 @@ class CustomDrawer extends StatefulWidget {
 
 class _CustomDrawerState extends State<CustomDrawer> {
   bool isSwitched = false;
-  String? imageURL =
-      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT98A0_6JOy9FNLcNjipGe4xSgzGiCTfgLybw&usqp=CAU';
-
+  String? imageURL;
   late User currentUser;
   late DatabaseReference userRef;
 
@@ -97,7 +95,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
                     icon: Icons.videocam,
                     text: "SOS Live Stream",
                     onTap: () {
-                      jumpToLiveStream(currentUser as String, true);
+                      jumpToLiveStream(currentUser.uid, true);
                     }),
                 const SizedBox(height: 20),
                 buildDrawerItem(
@@ -200,9 +198,9 @@ class _CustomDrawerState extends State<CustomDrawer> {
   Widget getAvatar() {
     return CircleAvatar(
       radius: 60,
-      backgroundColor: Colors.red.shade900,
-      backgroundImage: imageURL != "" ? NetworkImage(imageURL!) : null,
-      child: imageURL == ""
+      backgroundColor: Colors.red,
+      backgroundImage: imageURL != null ? NetworkImage(imageURL!) : null,
+      child: imageURL == null
           ? const Icon(Icons.person, color: Colors.white, size: 40)
           : null,
     );
@@ -229,7 +227,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
     );
   }
 
-  jumpToLiveStream(String liveId, bool isHost) {
+  void jumpToLiveStream(String liveId, bool isHost) {
     if (liveId.isNotEmpty) {
       Get.to(
         () => LiveStreamingPage(
