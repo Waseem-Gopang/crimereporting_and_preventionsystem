@@ -90,7 +90,11 @@ class _SendEmailState extends State<SendEmail> {
         },
         validator: (val) {
           if (val!.isEmpty) {
-            return "Email Address is required";
+            return 'Please enter your email';
+          } else if ((val.isNotEmpty) &&
+              !RegExp(r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?)*$")
+                  .hasMatch(val)) {
+            return "Enter a valid email";
           }
           return null;
         },
@@ -114,8 +118,15 @@ class _SendEmailState extends State<SendEmail> {
           });
         },
         validator: (val) {
-          if (val!.isEmpty) {
+          if (val == null || val.isEmpty) {
             return "Message Content is required";
+          }
+
+          // Split the input by whitespace and count the words
+          int wordCount = val.trim().split(RegExp(r'\s+')).length;
+
+          if (wordCount < 50) {
+            return "Please enter at least 50 words";
           }
           return null;
         },

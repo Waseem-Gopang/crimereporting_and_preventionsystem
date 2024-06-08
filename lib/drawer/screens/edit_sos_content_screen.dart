@@ -1,4 +1,5 @@
 import 'package:background_sms/background_sms.dart';
+import 'package:crimereporting_and_preventionsystem/emergency_official/message_sending.dart';
 import 'package:crimereporting_and_preventionsystem/home.dart';
 import 'package:crimereporting_and_preventionsystem/utils/custom_widget.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -36,35 +37,31 @@ class _EditSOSContentState extends State<EditSOSContent> {
   String addtionalInfo = "";
   Future<void> _sendSMS(String message, List<String> recipients) async {
     for (var recipient in recipients) {
-      SmsStatus status = await BackgroundSms.sendMessage(
-        phoneNumber: recipient,
-        message: message,
-      );
+      try {
+        SmsStatus status = await BackgroundSms.sendMessage(
+          phoneNumber: recipient,
+          message: message,
+        );
 
-      if (status == SmsStatus.sent) {
-        Get.snackbar("SMS", "Distress SMS Sent Successfully");
-      } else {
-        Get.snackbar("SMS", "Failed to send SMS to $recipient");
+        if (status == SmsStatus.sent) {
+          Get.snackbar("SMS", "Distress SMS Sent Successfully to $recipient",
+              duration: const Duration(seconds: 3),
+              backgroundColor: Colors.green,
+              colorText: Colors.white);
+        } else {
+          Get.snackbar("SMS", "Failed to send SMS to $recipient",
+              duration: const Duration(seconds: 3),
+              backgroundColor: Colors.green,
+              colorText: Colors.white);
+        }
+      } catch (e) {
+        Get.snackbar("Error", "Failed to send SMS: ${e.toString()}",
+            duration: const Duration(seconds: 3),
+            backgroundColor: Colors.green,
+            colorText: Colors.white);
       }
     }
   }
-
-  // getInfo() async {
-  //   var data = await AuthService().getSOSData(user.uid);
-
-  //   if (data != null && data.containsKey("info")) {
-  //     List<dynamic>? infoData = data["info"];
-  //     if (infoData != null) {
-  //       for (var dt in infoData) {
-  //         Map info = dt;
-  //         infoList.add(Info(info.keys.first, info.values.first));
-  //       }
-  //       setState(() {
-  //         haveInfo = true;
-  //       });
-  //     }
-  //   }
-  // }
 
   getMessage() async {
     location = await getLocation();
@@ -92,7 +89,6 @@ class _EditSOSContentState extends State<EditSOSContent> {
   @override
   void initState() {
     getMessage();
-    //getInfo();
     super.initState();
   }
 
@@ -186,13 +182,8 @@ class _EditSOSContentState extends State<EditSOSContent> {
           ),
           onPressed: () async {
             if (_formKey.currentState!.validate()) {
-              // Build the final message
               String finalMessage = message + addtionalInfo;
 
-              // Send the SMS using MessageController
-              // MessageController messageController =
-              //     Get.find<MessageController>();
-              // await messageController.sendLocationViaSMS(finalMessage);
               List<String> emergencyContacts = await emergencyContactsController
                   .loadEmergencyContactsFromFirebase();
               if (emergencyContacts.isNotEmpty) {

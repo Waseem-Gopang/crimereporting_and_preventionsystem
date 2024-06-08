@@ -82,10 +82,10 @@ class _AddEmergencyContactState extends State<AddEmergencyContact> {
                 hint: 'Enter contact no. of the person',
                 validator: (val) {
                   if (val!.isEmpty) {
-                    return "Please enter the contact no.";
+                    return "Please enter the mobile number";
                   } else if ((val.isNotEmpty) &&
-                      !RegExp(r"^(\d+)*$").hasMatch(val)) {
-                    return "Enter a valid contact no.";
+                      !RegExp(r'^03\d{9}$').hasMatch(val)) {
+                    return "Enter a valid number like 03003120110";
                   }
                   return null;
                 },
