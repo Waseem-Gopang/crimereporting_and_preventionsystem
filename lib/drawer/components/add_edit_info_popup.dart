@@ -17,7 +17,6 @@ class _AddEditInfoPopUPState extends State<AddEditInfoPopUP> {
   String? type;
 
   Info? info;
-  List<String> infoType = ['Medical', 'Other'];
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +27,7 @@ class _AddEditInfoPopUPState extends State<AddEditInfoPopUP> {
         padding: const EdgeInsets.all(5.0),
         child: Form(
           child: Column(
-            children: <Widget>[selectTypeField(), getContentField()],
+            children: <Widget>[getContentField()],
           ),
         ),
       ),
@@ -52,51 +51,11 @@ class _AddEditInfoPopUPState extends State<AddEditInfoPopUP> {
               style: TextStyle(color: Colors.white),
             ),
             onPressed: () {
-              info = Info(type!, description!);
+              info = Info(description!);
               widget.onAdd(info!);
               Navigator.of(context).pop();
             })
       ],
-    );
-  }
-
-  selectTypeField() {
-    return Container(
-      padding: const EdgeInsets.only(bottom: 10),
-      child: Container(
-          width: 400,
-          padding: const EdgeInsets.only(left: 20, right: 20),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(10.0),
-            border: Border.all(color: Colors.grey.shade400),
-          ),
-          child: DropdownButtonHideUnderline(
-            child: DropdownButtonFormField<String>(
-              decoration: const InputDecoration(
-                enabledBorder: InputBorder.none,
-                errorBorder: InputBorder.none,
-                focusedBorder: InputBorder.none,
-              ),
-              isExpanded: true,
-              hint: const Text("Select type of detail"),
-              items: infoType.map((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(value),
-                );
-              }).toList(),
-              validator: (value) {
-                if (type == null) {
-                  return "Please select the type of info";
-                }
-                return null;
-              },
-              onChanged: (value) {
-                type = value.toString();
-              },
-            ),
-          )),
     );
   }
 

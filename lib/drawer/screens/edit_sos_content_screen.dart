@@ -35,6 +35,7 @@ class _EditSOSContentState extends State<EditSOSContent> {
   String message = "SOS! Immediate Help required:";
 
   String addtionalInfo = "";
+
   Future<void> _sendSMS(String message, List<String> recipients) async {
     for (var recipient in recipients) {
       try {
@@ -212,9 +213,8 @@ class _EditSOSContentState extends State<EditSOSContent> {
           onAdd: (value) {
             setState(() {
               infoList.add(value);
-              debugPrint(infoList as String?);
               haveInfo = true;
-              addtionalInfo += "\n${value.type}: \n${value.description},";
+              addtionalInfo += "\n${value.description},";
             });
           },
         );
@@ -235,11 +235,10 @@ class _EditSOSContentState extends State<EditSOSContent> {
             itemBuilder: (BuildContext context, int index) {
               addtionalInfo = "";
               for (var i in infoList) {
-                addtionalInfo += "\n${i.type}: \n${i.description},";
+                addtionalInfo += "\n${i.description},";
               }
               return Card(
                 child: ListTile(
-                  title: Text(infoList[index].type),
                   subtitle: Text(infoList[index].description),
                   trailing: IconButton(
                     icon: const Icon(Icons.cancel_outlined),
@@ -251,7 +250,7 @@ class _EditSOSContentState extends State<EditSOSContent> {
 
                         addtionalInfo = "";
                         for (var i in infoList) {
-                          addtionalInfo += "\n${i.type}: \n${i.description},";
+                          addtionalInfo += "\n${i.description},";
                         }
                       });
                     },
