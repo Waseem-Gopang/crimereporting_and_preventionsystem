@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'package:crimereporting_and_preventionsystem/home.dart';
 import 'package:crimereporting_and_preventionsystem/utils/custom_widget.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -37,8 +36,6 @@ class _EditProfileState extends State<EditProfile> {
 
   File? image;
 
-  // bool haveImage = false;
-
   TextEditingController dateCtl = TextEditingController();
 
   @override
@@ -63,7 +60,6 @@ class _EditProfileState extends State<EditProfile> {
         mobileNo = data['phone'] ?? '';
         address = data['address'] ?? '';
         zipcode = data['zCode'] ?? '';
-        //haveImage = imageURL.isNotEmpty;
       });
     } else {
       // If no data in database, use Google account information
@@ -175,7 +171,6 @@ class _EditProfileState extends State<EditProfile> {
                             address = value;
                           },
                         ),
-                        //const SizedBox(height: 20.0),
                         getTextField(
                           text: zipcode,
                           isEdit: true,
@@ -274,7 +269,7 @@ class _EditProfileState extends State<EditProfile> {
           child: Padding(
             padding: const EdgeInsets.fromLTRB(40, 10, 40, 10),
             child: Text(
-              "Submit".toUpperCase(),
+              "Update".toUpperCase(),
               style: const TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
@@ -307,15 +302,8 @@ class _EditProfileState extends State<EditProfile> {
               //get user data snapshot
               final snapshot = await userRef.child(uID.toString()).get();
               if (snapshot.exists) {
-                Map data = await json.decode(json.encode(snapshot.value));
-                //set new data to Global User instance
-                // setUserInfo(uID.toString(), data);
                 Fluttertoast.showToast(
                     msg: "Profile Details Updated Successfully");
-                if (image != null) {
-                  //edit user profile in posts data
-                  // await editAvatarPostList();
-                }
               } else {
                 Fluttertoast.showToast(msg: 'Error Updating user profile');
               }

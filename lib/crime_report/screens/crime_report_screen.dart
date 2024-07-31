@@ -146,8 +146,8 @@ class _CrimeReportScreenState extends State<CrimeReportScreen> {
                       if (val!.isEmpty) {
                         return "Please enter your mobile number";
                       } else if ((val.isNotEmpty) &&
-                          !RegExp(r'^\92[3456789]\d{9}$').hasMatch(val)) {
-                        return "Enter a valid mobile number like 923001283753";
+                          !RegExp(r'^03\d{9}$').hasMatch(val)) {
+                        return "Enter a valid number like 03003120110";
                       }
                       return null;
                     },

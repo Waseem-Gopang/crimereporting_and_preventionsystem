@@ -125,8 +125,8 @@ class _SendEmailState extends State<SendEmail> {
           // Split the input by whitespace and count the words
           int wordCount = val.trim().split(RegExp(r'\s+')).length;
 
-          if (wordCount < 50) {
-            return "Please enter at least 50 words";
+          if (wordCount < 20) {
+            return "Please enter at least 20 words";
           }
           return null;
         },

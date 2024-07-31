@@ -1,9 +1,9 @@
-import 'package:crimereporting_and_preventionsystem/login_register/components/header_widget.dart';
-import 'package:crimereporting_and_preventionsystem/utils/theme.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
+import '../../utils/theme.dart';
+import '../components/header_widget.dart';
 
 class ForgetPassword extends StatefulWidget {
   const ForgetPassword({Key? key}) : super(key: key);
@@ -14,10 +14,8 @@ class ForgetPassword extends StatefulWidget {
 
 class _ForgetPasswordState extends State<ForgetPassword> {
   final double _headerHeight = 250;
-
   final _formKey = GlobalKey<FormState>();
   final emailController = TextEditingController();
-  late String email;
 
   @override
   void dispose() {
@@ -25,13 +23,26 @@ class _ForgetPasswordState extends State<ForgetPassword> {
     super.dispose();
   }
 
-  Future<void> resetPass(BuildContext context, String email) async {
+  Future<void> resetPass(BuildContext context) async {
+    final email = emailController.text.trim(); // Trim whitespace
+
+    if (email.isEmpty) {
+      Get.snackbar(
+        "Error",
+        "Please enter your email",
+        duration: const Duration(seconds: 3),
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+      return;
+    }
+
     try {
       // Check if the email is registered
       List<String> signInMethods =
           await FirebaseAuth.instance.fetchSignInMethodsForEmail(email);
 
-      if (signInMethods.isNotEmpty) {
+      if (signInMethods.isEmpty) {
         // Email is registered, send password reset email
         await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
         Get.snackbar(
@@ -52,9 +63,23 @@ class _ForgetPasswordState extends State<ForgetPassword> {
         );
       }
     } on FirebaseAuthException catch (e) {
+      String errorMessage;
+      switch (e.code) {
+        case 'invalid-email':
+          errorMessage = "The email address is badly formatted.";
+          break;
+        case 'user-not-found':
+          errorMessage = "No user found with this email.";
+          break;
+        case 'too-many-requests':
+          errorMessage = "Too many requests. Try again later.";
+          break;
+        default:
+          errorMessage = e.message ?? "An unexpected error occurred.";
+      }
       Get.snackbar(
         "Error",
-        e.message ?? "An unexpected error occurred",
+        errorMessage,
         duration: const Duration(seconds: 3),
         backgroundColor: Colors.red,
         colorText: Colors.white,
@@ -62,7 +87,7 @@ class _ForgetPasswordState extends State<ForgetPassword> {
     } catch (error) {
       Get.snackbar(
         "Error",
-        error.toString(),
+        "An unexpected error occurred. Please try again later.",
         duration: const Duration(seconds: 3),
         backgroundColor: Colors.red,
         colorText: Colors.white,
@@ -137,10 +162,7 @@ class _ForgetPasswordState extends State<ForgetPassword> {
                               ),
                               onPressed: () async {
                                 if (_formKey.currentState!.validate()) {
-                                  setState(() {
-                                    email = emailController.text;
-                                    resetPass(context, email);
-                                  });
+                                  await resetPass(context);
                                 }
                               },
                             ),
