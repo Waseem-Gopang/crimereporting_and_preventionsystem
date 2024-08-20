@@ -1,16 +1,13 @@
-# crimereporting_and_preventionsystem
+<img src="signup.jpeg" alt="Screenshot" width="400" height="550"> <img src="signup 2.jpeg" alt="Screenshot" width="400" height="550">
 
-A new Flutter project.
+<img src="login.jpeg" alt="Screenshot" width="400" height="550"> <img src="forget password.jpeg" alt="Screenshot" width="400" height="550">
 
-## Getting Started
+<img src="Homepage.jpeg" alt="Screenshot" width="400" height="550"> <img src="crime report.jpeg" alt="Screenshot" width="400" height="550">
 
-This project is a starting point for a Flutter application.
+<img src="crime locations.jpeg" alt="Screenshot" width="400" height="550"> <img src="dashboard.jpeg" alt="Screenshot" width="400" height="550">
 
-A few resources to get you started if this is your first Flutter project:
+<img src="police.jpeg" alt="Screenshot" width="400" height="550"> <img src="firefighter.jpeg" alt="Screenshot" width="400" height="550">
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+<img src="ambulance.jpeg" alt="Screenshot" width="400" height="550"> <img src="hospital.jpeg" alt="Screenshot" width="400" height="550">
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+<img src="sos.jpeg" alt="Screenshot" width="400" height="550"> 
