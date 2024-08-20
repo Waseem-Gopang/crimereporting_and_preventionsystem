@@ -1,4 +1,4 @@
-<img src="signup.jpeg" alt="Screenshot" width="370" height="550"> <img src="signup 2.jpeg" alt="Screenshot" width="350" height="450">
+<img src="signup.jpeg" alt="Screenshot" width="370" height="550">          <img src="signup 2.jpeg" alt="Screenshot" width="370" height="550">
 
 <img src="login.jpeg" alt="Screenshot" width="350" height="450"> <img src="forget password.jpeg" alt="Screenshot" width="350" height="450">
 
