@@ -14,4 +14,10 @@
 
 <img src="ambulance.jpeg" alt="Screenshot" width="400" height="550">  <img src="hospital.jpeg" alt="Screenshot" width="400" height="550">  
 
-<img src="firefighter.jpeg" alt="Screenshot" width="400" height="550"> <img src="firefighter.jpeg" alt="Screenshot" width="400" height="550"> 
+<img src="account settings.jpeg" alt="Screenshot" width="400" height="550"> <img src="Edit Profile.jpeg" alt="Screenshot" width="400" height="550"> 
+
+<img src="feedback.jpeg" alt="Screenshot" width="400" height="550">  <img src="edit sos content.jpeg" alt="Screenshot" width="400" height="550"> 
+
+<img src="add emergency contact.jpeg" alt="Screenshot" width="400" height="550">  <img src="manage contacts new.jpeg" alt="Screenshot" width="400" height="550"> 
+
+<img src="logout.jpeg" alt="Screenshot" width="400" height="550"> 
