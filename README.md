@@ -1,16 +1,23 @@
-# crimereporting_and_preventionsystem
+<img src="signup.jpeg" alt="Screenshot" width="370" height="550">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="signup 2.jpeg" alt="Screenshot" width="370" height="550">
 
-A new Flutter project.
+<img src="login.jpeg" alt="Screenshot" width="370" height="550">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="forget password.jpeg" alt="Screenshot" width="370" height="550">
 
-## Getting Started
+<img src="Homepage.jpeg" alt="Screenshot" width="370" height="550">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <img src="crime report.jpeg" alt="Screenshot" width="370" height="550">
 
-This project is a starting point for a Flutter application.
+<img src="user agreement.jpeg" alt="Screenshot" width="370" height="550">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <img src="crime locations.jpeg" alt="Screenshot" width="370" height="550">
 
-A few resources to get you started if this is your first Flutter project:
+<img src="crime descripton.jpeg" alt="Screenshot" width="370" height="550">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  <img src="awareness.jpeg" alt="Screenshot" width="370" height="550"> 
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+<img src="awareness 2.jpeg" alt="Screenshot" width="370" height="550">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <img src="emergency officials.jpeg" alt="Screenshot" width="370" height="550"> 
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+<img src="police.jpeg" alt="Screenshot" width="370" height="550">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <img src="firefighter.jpeg" alt="Screenshot" width="370" height="550">
+
+<img src="ambulance.jpeg" alt="Screenshot" width="370" height="550">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  <img src="hospital.jpeg" alt="Screenshot" width="370" height="550">  
+
+<img src="account settings.jpeg" alt="Screenshot" width="370" height="550">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <img src="Edit Profile.jpeg" alt="Screenshot" width="370" height="550"> 
+
+<img src="feedback.jpeg" alt="Screenshot" width="370" height="550">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  <img src="edit sos content.jpeg" alt="Screenshot" width="370" height="550"> 
+
+<img src="add emergency contact.jpeg" alt="Screenshot" width="370" height="550">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  <img src="manage contacts new.jpeg" alt="Screenshot" width="370" height="550"> 
+
+<img src="logout.jpeg" alt="Screenshot" width="370" height="550"> 
