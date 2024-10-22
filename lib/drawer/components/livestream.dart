@@ -15,8 +15,7 @@ class LiveStreamingPage extends StatelessWidget {
     return SafeArea(
       child: ZegoUIKitPrebuiltLiveStreaming(
         appID: 1040397391,
-        appSign:
-            "e4d7d3b5bfeaea95393bb5fe8dc5c6a68781fc07dbbdddcf811a64e4a3418a27",
+        appSign: "app sign here",
         userID: Random().nextInt(100000).toString(),
         userName: "user",
         liveID: liveId,
